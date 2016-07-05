@@ -42,33 +42,55 @@ public class MainActivity extends AppCompatActivity {
 
         HttpClient.checkNumberApi apiStores = HttpClient.retrofit().create(HttpClient.checkNumberApi.class);
         Call<ResponseBody> call = apiStores.checkNumber("1882656205"); //检查号码是否已经注册通过了
-        call.enqueue(new Callback<ResponseBody>() {
+
+        new HttpCall().call(call, new HttpCallback() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()){
-
-                    try {
-                        textView.setText(response.body().string()); //try 的很是烦人
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }else{
-                    try {
-                        textView.setText(TextUtils.convertUnicode(response.errorBody().string()+"@@@@"+response.code())); //try 的很是烦人
-//                        Log.e(TAG,TextUtils.convertUnicode(response.errorBody().string()+"#####"+response.code()));
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
+            public void onSuccess(BaseResponse response) {
+                Log.e(TAG,response.getCode()+response.getError());
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e(TAG,call.toString()+t.toString());
-                textView.setText(call.toString()+t.toString()); //try 的很是烦人
+            public void onFailure(int code, String message) {
+                Log.e(TAG,code+message);
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
             }
         });
+
+
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                if(response.isSuccessful()){
+//
+//                    try {
+//                        textView.setText(response.body().string()); //try 的很是烦人
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }else{
+//                    try {
+//                        textView.setText(TextUtils.convertUnicode(response.errorBody().string()+"@@@@"+response.code())); //try 的很是烦人
+////                        Log.e(TAG,TextUtils.convertUnicode(response.errorBody().string()+"#####"+response.code()));
+//                    }catch (IOException e){
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                Log.e(TAG,call.toString()+t.toString());
+//                textView.setText(call.toString()+t.toString()); //try 的很是烦人
+//            }
+//        });
+
+
 
         //点击获取天气的接口 ....
         textView.setOnClickListener(new View.OnClickListener() {
@@ -85,48 +107,45 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     private void Login(){
+
+        //1.参数的封装
         LoginParams loginParams=new LoginParams();
         loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
         loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
         loginParams.setGrant_type("password");
         loginParams.setUsername("18826562075");
-        loginParams.setPassword("zxcv1234");
+        loginParams.setPassword("zxcv12345");
 
-//        1.LoginApi.class
-//        2.LoginResponse
-//        3.LoginParams
-//        4.
-
+        //2.弹药准备上膛
         HttpClient.LoginApi loginApi = HttpClient.retrofit().create(HttpClient.LoginApi.class);
         Call<LoginResponse> call = loginApi.goLogin(loginParams); //这两句我也不想写在外面
 
+        //3.第一种方式发射
         new HttpCall().call(call, new HttpCallback() {
             @Override
             public void onSuccess(BaseResponse response) {
-//                textView.setText(((LoginResponse)response).getResult();
                 LoginResponse loginResponse=(LoginResponse)response;
                 textView.setText(loginResponse.getResult().getAccessToken());
             }
 
             @Override
             public void onFailure(int code, String message) {
-                textView.setText(message+code);
+                textView.setText(message+" @@@% "+code);
             }
 
             @Override
-            public void failure(Throwable t) {
-
+            public void onError(Throwable t) {
+                textView.setText(t.toString());
             }
         });
 
 
+        //4.第二种方式发射
+        //.弹药准备上膛
 
-
-
-//        HttpClient.LoginApi loginApi = HttpClient.retrofit().create(HttpClient.LoginApi.class);  //
-//        Call<LoginResponse> call = loginApi.goLogin(loginParams); //这两句我也不想写在外面
-//
-//        call.enqueue(new Callback<LoginResponse>() {
+//        HttpClient.LoginApi loginApi2 = HttpClient.retrofit().create(HttpClient.LoginApi.class);
+//        Call<LoginResponse> call2 = loginApi2.goLogin(loginParams); //这两句我也不想写在外面
+//        call2.enqueue(new Callback<LoginResponse>() {
 //            @Override
 //            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {    //
 //                if(response.isSuccessful()){                    // code:[200,300）
@@ -152,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
 //                Log.e(TAG,call.toString()+t.toString());
 //                textView.setText(TextUtils.convertUnicode(call.toString()+t.toString())); //try 的很是烦人
 //            }
-//
 //        });
 
 

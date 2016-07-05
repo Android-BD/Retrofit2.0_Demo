@@ -1,6 +1,12 @@
 package com.example.zenglb.retrofittest.http;
 
+import android.util.Log;
+
 import com.example.zenglb.retrofittest.response.BaseResponse;
+import com.example.zenglb.retrofittest.utils.TextUtils;
+import com.google.gson.Gson;
+
+import java.io.IOException;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -16,6 +22,7 @@ import retrofit2.Response;
 public  class HttpCall<T> {
 
 	private static String TAG=HttpCall.class.getSimpleName();  //调试TAG
+	private static Gson gson = new Gson();
 
 	/**
 	 * 只有这个方法对外暴露
@@ -35,12 +42,25 @@ public  class HttpCall<T> {
 						httpCallback.onFailure(responseCode,response.body().getError());
                     }
                 }else{
+					try {
+						String errorBodyStr=TextUtils.convertUnicode(response.errorBody().string());
+						Log.e(TAG,errorBodyStr);
+						BaseResponse baseResponse=gson.fromJson(errorBodyStr,BaseResponse.class );
+						if(null!=baseResponse){
+							httpCallback.onFailure(baseResponse.getCode(),baseResponse.getError());
+							Log.e(TAG, baseResponse.getCode()+"%%%%%"+baseResponse.getError());
+						}
+					}catch (IOException e){
+						e.printStackTrace();
+					}
+
 //                    try {
 //                        textView.setText(TextUtils.convertUnicode(response.errorBody().string()+"@@@@"+response.code())); //try 的很是烦人
 //                        Log.e(TAG,TextUtils.convertUnicode(response.errorBody().string()+"#####"+response.code()));
 //                    }catch (IOException e){
 //                        e.printStackTrace();
 //                    }
+
                 }
 			}
 

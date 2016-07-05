@@ -32,7 +32,7 @@ public interface HttpCallback {
 	 * exception occurred creating the request or processing the response.
 	 *
 	 */
-	void failure(Throwable t);                //请求失败，
+	void onError(Throwable t);                //请求失败，
 
 
 }
