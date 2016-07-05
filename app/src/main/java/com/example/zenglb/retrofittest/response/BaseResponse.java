@@ -4,7 +4,7 @@ package com.example.zenglb.retrofittest.response;
  *
  * 所有的Response 都包含这两项
  */
-public class BaseResponse {
+public abstract class BaseResponse {
     private int code;
     private String error;
 

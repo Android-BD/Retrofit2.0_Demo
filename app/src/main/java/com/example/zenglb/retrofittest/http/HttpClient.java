@@ -1,5 +1,7 @@
-package com.example.zenglb.retrofittest;
+package com.example.zenglb.retrofittest.http;
 
+import com.example.zenglb.retrofittest.LoginParams;
+import com.example.zenglb.retrofittest.WeatherJson;
 import com.example.zenglb.retrofittest.response.LoginResponse;
 
 import okhttp3.ResponseBody;
@@ -69,7 +71,7 @@ public class HttpClient {
      */
     public interface LoginApi {
         @POST("api/lebang/oauth/access_token")
-        Call<LoginResponse> goLogin(@Body LoginParams loginParams);  //设置一下Header！
+        Call<LoginResponse> goLogin(@Body LoginParams loginParams);  //设置一下Header！do call
     }
 
 

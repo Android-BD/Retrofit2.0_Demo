@@ -1,4 +1,4 @@
-package com.example.zenglb.retrofittest;
+package com.example.zenglb.retrofittest.utils;
 
 /**
  * Created by zenglb on 2016/7/4.
@@ -6,6 +6,12 @@ package com.example.zenglb.retrofittest;
 public class TextUtils {
 
 
+    /**
+     * 把含有Unicode 的字符串可视化
+     *
+     * @param ori
+     * @return
+     */
     public static String convertUnicode(String ori) {
         char aChar;
         int len = ori.length();
