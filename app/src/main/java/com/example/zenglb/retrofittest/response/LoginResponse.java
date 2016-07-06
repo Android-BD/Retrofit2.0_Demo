@@ -7,6 +7,11 @@ public class LoginResponse extends BaseResponse{
 
     private Result result;
 
+    public LoginResponse(int code, String error, Result result) {
+        super(code, error);
+        this.result = result;
+    }
+
     public class Result {
 
         private String access_token;

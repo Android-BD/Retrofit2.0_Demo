@@ -1,26 +1,22 @@
 package com.example.zenglb.retrofittest.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.zenglb.retrofittest.LoginParams;
+import com.example.zenglb.retrofittest.R;
 import com.example.zenglb.retrofittest.http.HttpCall;
 import com.example.zenglb.retrofittest.http.HttpCallback;
 import com.example.zenglb.retrofittest.http.HttpClient;
-import com.example.zenglb.retrofittest.LoginParams;
-import com.example.zenglb.retrofittest.R;
 import com.example.zenglb.retrofittest.response.BaseResponse;
-import com.example.zenglb.retrofittest.utils.TextUtils;
-import com.example.zenglb.retrofittest.WeatherJson;
 import com.example.zenglb.retrofittest.response.LoginResponse;
 
-import java.io.IOException;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  *
@@ -29,16 +25,12 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private final String TAG=MainActivity.class.getSimpleName();
     private TextView textView;
-
+    private BaseResponse baseResponse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView=(TextView) findViewById(R.id.message);
-
-
-
-
 
         HttpClient.checkNumberApi apiStores = HttpClient.retrofit().create(HttpClient.checkNumberApi.class);
         Call<ResponseBody> call = apiStores.checkNumber("1882656205"); //检查号码是否已经注册通过了
@@ -47,12 +39,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(BaseResponse response) {
                 Log.e(TAG,response.getCode()+response.getError());
+                textView.setText(response.getCode()+response.getError());
             }
 
             @Override
             public void onFailure(int code, String message) {
                 Log.e(TAG,code+message);
-
+                textView.setText(code+message);
             }
 
             @Override
@@ -60,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
 
 
 //        call.enqueue(new Callback<ResponseBody>() {
@@ -100,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 Login();
             }
         });
+
     }
 
     /**
@@ -126,16 +122,19 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(BaseResponse response) {
                 LoginResponse loginResponse=(LoginResponse)response;
                 textView.setText(loginResponse.getResult().getAccessToken());
+
             }
 
             @Override
             public void onFailure(int code, String message) {
                 textView.setText(message+" @@@% "+code);
+//                messageStr=message+" @@@% "+code;
             }
 
             @Override
             public void onError(Throwable t) {
                 textView.setText(t.toString());
+//                messageStr=t.toString();
             }
         });
 
@@ -178,29 +177,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * 请求天气信息
-     */
-    private void getWeather() {
-        HttpClient.getWeatherApi getWeatherApiStores = HttpClient.retrofit().create(HttpClient.getWeatherApi.class);
-        Call<WeatherJson> call = getWeatherApiStores.getWeather("101010100");   //北京的天气信息：101010100
-        call.enqueue(new Callback<WeatherJson>() {
-            @Override
-            public void onResponse(Call<WeatherJson> call, Response<WeatherJson> response) {
-                if(response.isSuccessful()){
-                    textView.setText(response.body().getWeatherinfo().toString());
-                }else{
-                    int sc = response.code();
-                    textView.setText("ErrorCode:"+sc);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<WeatherJson> call, Throwable t) {
-                Log.i("wxl", "getWeatherinfo=" + t.toString());
-                textView.setText("getWeatherinfo=" + t.toString());
-
-            }
-        });
-    }
+//    /**
+//     * 请求天气信息
+//     */
+//    private void getWeather() {
+//        HttpClient.getWeatherApi getWeatherApiStores = HttpClient.retrofit().create(HttpClient.getWeatherApi.class);
+//        Call<WeatherJson> call = getWeatherApiStores.getWeather("101010100");   //北京的天气信息：101010100
+//        call.enqueue(new Callback<WeatherJson>() {
+//            @Override
+//            public void onResponse(Call<WeatherJson> call, Response<WeatherJson> response) {
+//                if(response.isSuccessful()){
+//                    textView.setText(response.body().getWeatherinfo().toString());
+//                }else{
+//                    int sc = response.code();
+//                    textView.setText("ErrorCode:"+sc);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<WeatherJson> call, Throwable t) {
+//                Log.i("wxl", "getWeatherinfo=" + t.toString());
+//                textView.setText("getWeatherinfo=" + t.toString());
+//
+//            }
+//        });
+//    }
 }

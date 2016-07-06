@@ -8,19 +8,17 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * 花落的那一天，消失的下雨天，好像再淋一遍。
+ * 泛型T 没有任何用，目前
  * 
  *
  * @author anylife.zlb@gmail.com
  */
 public  class HttpCall<T> {
-
 	private static String TAG=HttpCall.class.getSimpleName();  //调试TAG
 	private static Gson gson = new Gson();
 
@@ -48,26 +46,20 @@ public  class HttpCall<T> {
 						BaseResponse baseResponse=gson.fromJson(errorBodyStr,BaseResponse.class );
 						if(null!=baseResponse){
 							httpCallback.onFailure(baseResponse.getCode(),baseResponse.getError());
-							Log.e(TAG, baseResponse.getCode()+"%%%%%"+baseResponse.getError());
+							Log.e(TAG, baseResponse.getCode()+"%% %%"+baseResponse.getError());
 						}
 					}catch (IOException e){
 						e.printStackTrace();
 					}
-
-//                    try {
-//                        textView.setText(TextUtils.convertUnicode(response.errorBody().string()+"@@@@"+response.code())); //try 的很是烦人
-//                        Log.e(TAG,TextUtils.convertUnicode(response.errorBody().string()+"#####"+response.code()));
-//                    }catch (IOException e){
-//                        e.printStackTrace();
-//                    }
 
                 }
 			}
 
 			@Override
 			public void onFailure(Call<BaseResponse> call, Throwable t) {
-
+				httpCallback.onError(t);
 			}
+
 		});
 
 
