@@ -2,14 +2,18 @@ package com.example.zenglb.retrofittest.http;
 
 import com.example.zenglb.retrofittest.LoginParams;
 import com.example.zenglb.retrofittest.WeatherJson;
+import com.example.zenglb.retrofittest.response.BaseResponse;
 import com.example.zenglb.retrofittest.response.LoginResponse;
+import com.example.zenglb.retrofittest.response.OrganizationResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -63,7 +67,7 @@ public class HttpClient {
      */
     public interface checkNumberApi {
         @GET("api/lebang/staffs/mobile/{mobile}")
-        Call<ResponseBody>  checkNumber(@Path("mobile") String mobile);
+        Call<BaseResponse>  checkNumber(@Path("mobile") String mobile);
     }
 
     /**
@@ -72,6 +76,15 @@ public class HttpClient {
     public interface LoginApi {
         @POST("api/lebang/oauth/access_token")
         Call<LoginResponse> goLogin(@Body LoginParams loginParams);  //设置一下Header！do call
+    }
+
+    /**
+     *获取组织  Authorization   Bearer 7tYVIQ15HG3bijohwSjjyohxlqTqWq
+     */
+    public interface getOrganazationsApi{     //需要登录的就是添加那几个参数嘛
+        @Headers("Authorization:Bearer dJ1FyRk21bxbxPERuPmujjFLWwgGRO")    //需要登录的添加token，其他的3个放在拦截器里面    Authorization
+        @GET("api/lebang/organizations")
+        Call<OrganizationResponse> getOrganazations();
     }
 
 

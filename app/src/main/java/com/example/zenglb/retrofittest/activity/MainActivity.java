@@ -1,6 +1,5 @@
 package com.example.zenglb.retrofittest.activity;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,8 +13,8 @@ import com.example.zenglb.retrofittest.http.HttpCallback;
 import com.example.zenglb.retrofittest.http.HttpClient;
 import com.example.zenglb.retrofittest.response.BaseResponse;
 import com.example.zenglb.retrofittest.response.LoginResponse;
+import com.example.zenglb.retrofittest.response.OrganizationResponse;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
@@ -25,7 +24,6 @@ import retrofit2.Call;
 public class MainActivity extends AppCompatActivity {
     private final String TAG=MainActivity.class.getSimpleName();
     private TextView textView;
-    private BaseResponse baseResponse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,19 +31,18 @@ public class MainActivity extends AppCompatActivity {
         textView=(TextView) findViewById(R.id.message);
 
         HttpClient.checkNumberApi apiStores = HttpClient.retrofit().create(HttpClient.checkNumberApi.class);
-        Call<ResponseBody> call = apiStores.checkNumber("1882656205"); //检查号码是否已经注册通过了
+        Call<BaseResponse> call = apiStores.checkNumber("18826562075"); //检查号码是否已经注册通过了
 
         new HttpCall().call(call, new HttpCallback() {
             @Override
             public void onSuccess(BaseResponse response) {
-                Log.e(TAG,response.getCode()+response.getError());
                 textView.setText(response.getCode()+response.getError());
             }
 
             @Override
             public void onFailure(int code, String message) {
                 Log.e(TAG,code+message);
-                textView.setText(code+message);
+                textView.setText(code+message);   //hello kitty
             }
 
             @Override
@@ -55,48 +52,52 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                if(response.isSuccessful()){
-//
-//                    try {
-//                        textView.setText(response.body().string()); //try 的很是烦人
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }else{
-//                    try {
-//                        textView.setText(TextUtils.convertUnicode(response.errorBody().string()+"@@@@"+response.code())); //try 的很是烦人
-////                        Log.e(TAG,TextUtils.convertUnicode(response.errorBody().string()+"#####"+response.code()));
-//                    }catch (IOException e){
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                Log.e(TAG,call.toString()+t.toString());
-//                textView.setText(call.toString()+t.toString()); //try 的很是烦人
-//            }
-//        });
-
-
-
         //点击获取天气的接口 ....
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                getWeather();
-                Login();
+//                Login();
+                getOrganization();
             }
         });
 
     }
+
+    /**
+     * 获取组织架构
+     *
+     */
+    private void getOrganization(){
+        HttpClient.getOrganazationsApi getOrganazationsApi = HttpClient.retrofit().create(HttpClient.getOrganazationsApi.class);
+        Call<OrganizationResponse> call = getOrganazationsApi.getOrganazations(); //这两句我也不想写在外面
+        //3.第一种方式发射
+        new HttpCall().call(call, new HttpCallback() {
+            @Override
+            public void onSuccess(BaseResponse response) {
+//                LoginResponse loginResponse=(LoginResponse)response;
+//                textView.setText(loginResponse.getResult().getAccessToken());
+                OrganizationResponse organizationResponse=(OrganizationResponse)response;
+                textView.setText(organizationResponse.getResult().toString());
+
+            }
+
+            @Override
+            public void onFailure(int code, String message) {
+                textView.setText(message+" @@@% "+code);
+//                messageStr=message+" @@@% "+code;
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                textView.setText(t.toString());
+//                messageStr=t.toString();
+            }
+        });
+
+    }
+
+
 
     /**
      * 登录
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
         loginParams.setGrant_type("password");
         loginParams.setUsername("18826562075");
-        loginParams.setPassword("zxcv12345");
+        loginParams.setPassword("zxcv1234");
 
         //2.弹药准备上膛
         HttpClient.LoginApi loginApi = HttpClient.retrofit().create(HttpClient.LoginApi.class);
