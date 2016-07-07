@@ -60,6 +60,22 @@ public class OrganizationResponse extends BaseResponse {
 			this.name = name;
 		}
 
+		@Override
+		public String toString() {
+			return "Organization{" +
+					"code='" + code + '\'' +
+					", name='" + name + '\'' +
+					", is_project=" + is_project +
+					", need_position=" + need_position +
+					'}';
+		}
 	}
 
+
+	@Override
+	public String toString() {
+		return "OrganizationResponse{" +
+				"result=" + result +
+				'}';
+	}
 }

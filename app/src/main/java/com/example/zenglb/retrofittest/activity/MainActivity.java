@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
 //                textView.setText(loginResponse.getResult().getAccessToken());
                 OrganizationResponse organizationResponse=(OrganizationResponse)response;
                 textView.setText(organizationResponse.getResult().toString());
-
             }
 
             @Override
