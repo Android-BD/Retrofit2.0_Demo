@@ -1,5 +1,8 @@
 package com.example.zenglb.retrofittest.http;
 
+import android.text.TextUtils;
+
+import com.example.zenglb.retrofittest.BuildConfig;
 import com.example.zenglb.retrofittest.LoginParams;
 import com.example.zenglb.retrofittest.WeatherJson;
 import com.example.zenglb.retrofittest.response.BaseResponse;
@@ -43,7 +46,7 @@ public class HttpClient {
     private static Retrofit mRetrofit;
     private static final String baseUrl="https://test.4009515151.com/";
     public static final int  HTTP_SUCCESS=0;  //http 请求成功 ,暂时测试放在这里
-    private static String TOKEN="Bearer dJ1FyRk21bxbxPERuPmujjFLWwgGRO";
+    private static String TOKEN="Bearer dJ1FyRk21bxbxPERuPmujjFLWwgGRO";    //暂时的拿过来使用。
 
     /**
      * 这个名字不好
@@ -65,36 +68,36 @@ public class HttpClient {
 
 
             /**
-             那个 if 判断意思是，如果你的 token 是空的，就是还没有请求到 token，比如对于登陆请求，是没有 token 的，
-             只有等到登陆之后才有 token，这时候就不进行附着上 token。另外，如果你的请求中已经带有验证 header 了，
-             比如你手动设置了一个另外的 token，那么也不需要再附着这一个 token.
-
-             header 的 key 通常是 Authorization，如果你的不是这个，可以修改。
+             * 拦截器
              */
-            Interceptor mTokenInterceptor = new Interceptor() {
+            Interceptor interceptor = new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     Request originalRequest = chain.request();
-                    //alreadyHasAuthorizationHeader 已经手动的添加了token的也不需要再次添加
-//                    if (Your.sToken == null || alreadyHasAuthorizationHeader(originalRequest)) { //一般的退出登录后就把token  清除了
-//                        return chain.proceed(originalRequest);
-//                    }
-                    Request authorised = originalRequest.newBuilder()
-                            .header("Authorization", TOKEN)
-                            .build();
-                    return chain.proceed(authorised);
+                    if (TextUtils.isEmpty(TOKEN)){
+                        Request authorised = originalRequest.newBuilder()
+                                .addHeader("X-Platform","Android")
+                                .build();
+                        return chain.proceed(authorised);
+                    }else{
+                        Request authorised = originalRequest.newBuilder()
+                                .addHeader("X-Platform","Android")
+                                .addHeader("Authorization", TOKEN)    //一般的登录之前，登出之后的api 是不需要token 的。
+                                .build();
+                        return chain.proceed(authorised);
+                    }
                 }
             };
 
 
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY); //用于输出网络请求和结果的 Log
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
 
             OkHttpClient client = new OkHttpClient.Builder()
-                    .addInterceptor(interceptor)
+                    .addInterceptor(loggingInterceptor)
                     .retryOnConnectionFailure(true)                 //出现错误进行重新的连接？重试几次？错误了有没有回调？
                     .connectTimeout(15, TimeUnit.SECONDS)           //设置超时时间 15 秒
-                    .addNetworkInterceptor(mTokenInterceptor)     //
+                    .addNetworkInterceptor(interceptor)             //网络拦截器。
                     .build();
 
             mRetrofit = new Retrofit.Builder()

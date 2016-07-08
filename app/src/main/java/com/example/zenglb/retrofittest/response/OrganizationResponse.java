@@ -71,7 +71,6 @@ public class OrganizationResponse extends BaseResponse {
 		}
 	}
 
-
 	@Override
 	public String toString() {
 		return "OrganizationResponse{" +
