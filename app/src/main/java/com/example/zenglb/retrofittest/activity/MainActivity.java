@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
 import com.example.zenglb.retrofittest.LoginParams;
 import com.example.zenglb.retrofittest.R;
 import com.example.zenglb.retrofittest.http.HttpCall;
@@ -14,7 +13,6 @@ import com.example.zenglb.retrofittest.http.HttpClient;
 import com.example.zenglb.retrofittest.response.BaseResponse;
 import com.example.zenglb.retrofittest.response.LoginResponse;
 import com.example.zenglb.retrofittest.response.OrganizationResponse;
-
 import retrofit2.Call;
 
 /**
@@ -30,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         textView=(TextView) findViewById(R.id.message);
 
-        HttpClient.checkNumberApi apiStores = HttpClient.retrofit().create(HttpClient.checkNumberApi.class);
+
+        HttpClient.checkNumberApi apiStores = HttpClient.retrofit(this).create(HttpClient.checkNumberApi.class);
         Call<BaseResponse> call = apiStores.checkNumber("18826562075"); //检查号码是否已经注册通过了
 
         new HttpCall().call(call, new HttpCallback() {
@@ -51,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         //点击获取天气的接口 ....
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     private void getOrganization(){
-        HttpClient.getOrganazationsApi getOrganazationsApi = HttpClient.retrofit().create(HttpClient.getOrganazationsApi.class);
+        HttpClient.getOrganazationsApi getOrganazationsApi = HttpClient.retrofit(this).create(HttpClient.getOrganazationsApi.class);
         Call<OrganizationResponse> call = getOrganazationsApi.getOrganazations(); //这两句我也不想写在外面
         //3.第一种方式发射
         new HttpCall().call(call, new HttpCallback() {
@@ -113,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         loginParams.setPassword("zxcv1234");
 
         //2.弹药准备上膛
-        HttpClient.LoginApi loginApi = HttpClient.retrofit().create(HttpClient.LoginApi.class);
+        HttpClient.LoginApi loginApi = HttpClient.retrofit(this).create(HttpClient.LoginApi.class);
         Call<LoginResponse> call = loginApi.goLogin(loginParams); //这两句我也不想写在外面
 
         //3.第一种方式发射
@@ -139,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        //4.第二种方式发射
+        //4.第二种方式发射，这样子就很是麻烦，需要判断的东西实在是太多太多了
         //.弹药准备上膛
 
 //        HttpClient.LoginApi loginApi2 = HttpClient.retrofit().create(HttpClient.LoginApi.class);
@@ -173,12 +171,11 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
 
-
     }
 
 
 //    /**
-//     * 请求天气信息
+//     * 请求天气信息...
 //     */
 //    private void getWeather() {
 //        HttpClient.getWeatherApi getWeatherApiStores = HttpClient.retrofit().create(HttpClient.getWeatherApi.class);
@@ -202,4 +199,6 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 //    }
+
+
 }

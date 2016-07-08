@@ -13,7 +13,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * 泛型T 没有任何用，目前
+ * 项目  git@github.com:MasonLiuChn/RetrofitPlus.git  学习
  * 
  *
  * @author anylife.zlb@gmail.com

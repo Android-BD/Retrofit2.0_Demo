@@ -1,9 +1,11 @@
 package com.example.zenglb.retrofittest.http;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.example.zenglb.retrofittest.BuildConfig;
 import com.example.zenglb.retrofittest.LoginParams;
+import com.example.zenglb.retrofittest.R;
 import com.example.zenglb.retrofittest.WeatherJson;
 import com.example.zenglb.retrofittest.response.BaseResponse;
 import com.example.zenglb.retrofittest.response.LoginResponse;
@@ -12,21 +14,20 @@ import com.example.zenglb.retrofittest.response.OrganizationResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Authenticator;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
+
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okhttp3.Route;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -37,7 +38,6 @@ import retrofit2.http.Path;
  * 2.More:
  *       http://bxbxbai.github.io/2015/12/13/retrofit2/
  *       https://realm.io/cn/news/droidcon-jake-wharton-simple-http-retrofit-2/
- *
  *
  *
  * Created by zenglb on 2016/7/1.
@@ -52,7 +52,7 @@ public class HttpClient {
      * 这个名字不好
      * @return
      */
-    public static Retrofit retrofit() {
+    public static Retrofit retrofit(Context mContext) {
         if (mRetrofit == null) {
 
             //1.如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator，这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器：
@@ -65,7 +65,6 @@ public class HttpClient {
 //                            .build();
 //                }
 //            };
-
 
             /**
              * 拦截器
@@ -93,19 +92,22 @@ public class HttpClient {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
 
-            OkHttpClient client = new OkHttpClient.Builder()
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .addInterceptor(loggingInterceptor)
                     .retryOnConnectionFailure(true)                 //出现错误进行重新的连接？重试几次？错误了有没有回调？
                     .connectTimeout(15, TimeUnit.SECONDS)           //设置超时时间 15 秒
                     .addNetworkInterceptor(interceptor)             //网络拦截器。
                     .build();
 
+            okHttpClient = OkHttpClientUtil.getSSLClient(okHttpClient, mContext, "cert.crt");
+//            okHttpClient = OkHttpClientUtil.getSSLClientByCertificateString(okHttpClient,  certificateString);
+
             mRetrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)    //这里的BaseUrl 呵呵
+                    .baseUrl(baseUrl)     //这里的BaseUrl 呵呵
 //                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())   //RxJava 适配器，这个不太敢这样，就怕Hold不住
-                    .client(client)  // 是这样的设置吗？
+                    .client(okHttpClient)      // 是这样的设置吗？
                     .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+                    .build();            //build.
         }
         return mRetrofit;
     }
