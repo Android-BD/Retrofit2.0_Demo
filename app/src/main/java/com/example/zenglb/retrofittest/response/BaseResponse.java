@@ -1,12 +1,18 @@
 package com.example.zenglb.retrofittest.response;
 
+
 /**
  *
  * 所有的Response 都包含这两项
  */
-public  class BaseResponse {
+public  class BaseResponse  {
     private int code;
     private String error;
+
+    public BaseResponse(int code, String error) {
+        this.code = code;
+        this.error = error;
+    }
 
     public int getCode() {
         return code;

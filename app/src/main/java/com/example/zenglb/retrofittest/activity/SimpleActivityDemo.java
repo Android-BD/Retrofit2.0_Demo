@@ -46,7 +46,7 @@ public class SimpleActivityDemo extends AppCompatActivity {
         setContentView(R.layout.simple_demo);
         textView=(TextView) findViewById(R.id.message);
 
-        CheckNumberApi apiStores = HttpClient.retrofit().create(CheckNumberApi.class);
+        CheckNumberApi apiStores = HttpClient.retrofit(this).create(CheckNumberApi.class);
         Call<ResponseBody> call = apiStores.checkNumber("1882656205"); //检查号码是否已经注册通过了
         call.enqueue(new Callback<ResponseBody>() {
             @Override

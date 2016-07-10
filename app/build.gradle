@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
 
 
     defaultConfig {
         applicationId "com.example.zenglb.retrofittest"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -18,17 +18,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding {    //MVVP: https://developer.android.com/topic/libraries/data-binding/index.html?hl=zh-cn#build_environment
+        enabled = true
+    }
+
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.google.code.gson:gson:2.4'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.0-RC1'
-
-
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.0-RC1' //
 
 }
