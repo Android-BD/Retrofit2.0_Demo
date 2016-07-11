@@ -3,7 +3,7 @@ package com.example.zenglb.retrofittest.NewHttp;
 /**
  * Created by User on 2016/7/11.
  */
-public class CheckMobileResult {
+public class LoginResult {
 
         private String access_token;
         private String token_type;

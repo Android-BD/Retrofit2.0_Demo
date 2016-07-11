@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.example.zenglb.retrofittest.LoginParams;
-import com.example.zenglb.retrofittest.NewHttp.CheckMobileResult;
+import com.example.zenglb.retrofittest.NewHttp.LoginResult;
 import com.example.zenglb.retrofittest.NewHttp.MyCallBack;
 import com.example.zenglb.retrofittest.NewHttp.NewBaseResponse;
 import com.example.zenglb.retrofittest.R;
@@ -23,7 +23,10 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -41,34 +44,50 @@ public class MainActivity extends AppCompatActivity {
      */
     public interface CheckMobileApi {
         @GET("api/lebang/staffs/mobile/{mobile}")
-        Call<NewBaseResponse<CheckMobileResult>>  checkMobile(@Path("mobile") String mobile);
+        Call<NewBaseResponse<LoginResult>>  checkMobile(@Path("mobile") String mobile);
     }
 
+    /**
+     * 测试登录
+     */
+    public interface LoginApi {
+        @POST("api/lebang/oauth/access_token")
+        Call<NewBaseResponse<LoginResult>> goLogin(@Body LoginParams loginParams);  //设置一下Header！do call
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView=(TextView) findViewById(R.id.message);
+        //1.参数的封装
+        LoginParams loginParams=new LoginParams();
+        loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
+        loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
+        loginParams.setGrant_type("password");
+        loginParams.setUsername("18826562075");
+        loginParams.setPassword("zxcv1234");
+
 
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://test.4009515151.com/") //
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        CheckMobileApi checkMobileApi=retrofit.create(CheckMobileApi.class);
+        LoginApi loginApi=retrofit.create(LoginApi.class);
 
-        Call< NewBaseResponse<CheckMobileResult> > checkMobileCall = checkMobileApi.checkMobile("18826562075"); //检查号码是否已经注册通过了
+        Call<NewBaseResponse<LoginResult>> checkMobileCall = loginApi.goLogin(loginParams); //检查号码是否已经注册通过了
 
-        checkMobileCall.enqueue(new MyCallBack<NewBaseResponse<CheckMobileResult>>() {
+        checkMobileCall.enqueue(new MyCallBack<NewBaseResponse<LoginResult>>() {
             @Override
-            public void onSuc(Response<NewBaseResponse<CheckMobileResult>> response) {
+            public void onSuc(Response<NewBaseResponse<LoginResult>> response) {
                 Log.e(TAG,response.toString());
             }
 
             @Override
             public void onFail(String message) {
-
+                Log.e(TAG,message);
             }
         });
 
@@ -76,28 +95,26 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-        HttpClient.checkNumberApi apiStores = HttpClient.retrofit(this).create(HttpClient.checkNumberApi.class);
-        Call<BaseResponse> call = apiStores.checkNumber("18826562075"); //检查号码是否已经注册通过了
-
-        new HttpCall().call(call, new HttpCallback() {
-            @Override
-            public void onSuccess(BaseResponse response) {
-                textView.setText(response.getCode()+response.getError());
-            }
-
-            @Override
-            public void onFailure(int code, String message) {
-                Log.e(TAG,code+message);
-                textView.setText(code+message);   //hello kitty
-            }
-
-            @Override
-            public void onError(Throwable t) {
-
-            }
-        });
+//        HttpClient.checkNumberApi apiStores = HttpClient.retrofit(this).create(HttpClient.checkNumberApi.class);
+//        Call<BaseResponse> call = apiStores.checkNumber("18826562075"); //检查号码是否已经注册通过了
+//
+//        new HttpCall().call(call, new HttpCallback() {
+//            @Override
+//            public void onSuccess(BaseResponse response) {
+//                textView.setText(response.getCode()+response.getError());
+//            }
+//
+//            @Override
+//            public void onFailure(int code, String message) {
+//                Log.e(TAG,code+message);
+//                textView.setText(code+message);   //hello kitty
+//            }
+//
+//            @Override
+//            public void onError(Throwable t) {
+//
+//            }
+//        });
 
         //点击获取天气的接口 ....
         textView.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                getWeather();
 //                Login();
-                getOrganization();
                 getOrganization();
 
             }
