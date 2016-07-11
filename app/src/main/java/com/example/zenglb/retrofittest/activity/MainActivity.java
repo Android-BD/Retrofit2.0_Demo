@@ -13,6 +13,10 @@ import com.example.zenglb.retrofittest.http.HttpClient;
 import com.example.zenglb.retrofittest.response.BaseResponse;
 import com.example.zenglb.retrofittest.response.LoginResponse;
 import com.example.zenglb.retrofittest.response.OrganizationResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 
 /**
@@ -22,6 +26,7 @@ import retrofit2.Call;
 public class MainActivity extends AppCompatActivity {
     private final String TAG=MainActivity.class.getSimpleName();
     private TextView textView;
+    List<String> what=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
