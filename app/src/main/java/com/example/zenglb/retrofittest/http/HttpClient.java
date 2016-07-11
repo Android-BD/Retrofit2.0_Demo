@@ -67,7 +67,7 @@ public class HttpClient {
 //            };
 
             /**
-             * 拦截器
+             * 拦截器，能拦截成功吗？感觉但事后都是一样的东西在运行
              */
             Interceptor interceptor = new Interceptor() {
                 @Override
@@ -112,17 +112,15 @@ public class HttpClient {
         return mRetrofit;
     }
 
+
+
+
+
     public interface getWeatherApi {
         @GET("adat/sk/{cityId}.html")
         Call<WeatherJson> getWeather(@Path("cityId") String cityId);
     }
 
-//    public interface GitHubService {
-//        @GET("repos/{owner}/{repo}/contributors")
-//        Call<List<Contributor>> repoContributors(
-//                @Path("owner") String owner,
-//                @Path("repo") String repo);
-//    }
 
     /**
      * 检查号码是否存在

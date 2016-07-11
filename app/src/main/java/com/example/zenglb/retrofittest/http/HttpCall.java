@@ -28,7 +28,6 @@ public  class HttpCall<T> {
 	 * Call<T> call, Response<T> response  Call<ResponseBody>
 	 */
 	public  void call(final Call<BaseResponse> call, final HttpCallback httpCallback) {
-
 		call.enqueue(new Callback<BaseResponse>() {
 			@Override
 			public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {

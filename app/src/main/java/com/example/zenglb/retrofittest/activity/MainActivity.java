@@ -20,7 +20,8 @@ import java.util.List;
 import retrofit2.Call;
 
 /**
- *
+ * where you are
+ * 1
  *
  */
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView=(TextView) findViewById(R.id.message);
-
 
         HttpClient.checkNumberApi apiStores = HttpClient.retrofit(this).create(HttpClient.checkNumberApi.class);
         Call<BaseResponse> call = apiStores.checkNumber("18826562075"); //检查号码是否已经注册通过了
@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 //                getWeather();
 //                Login();
                 getOrganization();
+                getOrganization();
+
             }
         });
 
