@@ -6,6 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.example.zenglb.retrofittest.LoginParams;
+import com.example.zenglb.retrofittest.NewHttp.CheckMobileResult;
+import com.example.zenglb.retrofittest.NewHttp.MyCallBack;
+import com.example.zenglb.retrofittest.NewHttp.NewBaseResponse;
 import com.example.zenglb.retrofittest.R;
 import com.example.zenglb.retrofittest.http.HttpCall;
 import com.example.zenglb.retrofittest.http.HttpCallback;
@@ -18,6 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 /**
  * where you are
@@ -28,11 +35,48 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG=MainActivity.class.getSimpleName();
     private TextView textView;
     List<String> what=new ArrayList<>();
+
+    /**
+     * 检查号码是否存在
+     */
+    public interface CheckMobileApi {
+        @GET("api/lebang/staffs/mobile/{mobile}")
+        Call<NewBaseResponse<CheckMobileResult>>  checkMobile(@Path("mobile") String mobile);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView=(TextView) findViewById(R.id.message);
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://test.4009515151.com/") //
+                .build();
+
+        CheckMobileApi checkMobileApi=retrofit.create(CheckMobileApi.class);
+
+        Call< NewBaseResponse<CheckMobileResult> > checkMobileCall = checkMobileApi.checkMobile("18826562075"); //检查号码是否已经注册通过了
+
+        checkMobileCall.enqueue(new MyCallBack<NewBaseResponse<CheckMobileResult>>() {
+            @Override
+            public void onSuc(Response<NewBaseResponse<CheckMobileResult>> response) {
+                Log.e(TAG,response.toString());
+            }
+
+            @Override
+            public void onFail(String message) {
+
+            }
+        });
+
+
+
+
+
+
 
         HttpClient.checkNumberApi apiStores = HttpClient.retrofit(this).create(HttpClient.checkNumberApi.class);
         Call<BaseResponse> call = apiStores.checkNumber("18826562075"); //检查号码是否已经注册通过了
