@@ -113,9 +113,6 @@ public class HttpClient {
     }
 
 
-
-
-
     public interface getWeatherApi {
         @GET("adat/sk/{cityId}.html")
         Call<WeatherJson> getWeather(@Path("cityId") String cityId);

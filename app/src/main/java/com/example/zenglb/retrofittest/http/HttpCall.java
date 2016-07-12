@@ -18,7 +18,7 @@ import retrofit2.Response;
  *
  * @author anylife.zlb@gmail.com
  */
-public  class HttpCall<T> {
+public  class HttpCall<T extends BaseResponse> {
 	private static String TAG=HttpCall.class.getSimpleName();  //调试TAG
 	private static Gson gson = new Gson();
 

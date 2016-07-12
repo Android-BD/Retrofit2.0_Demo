@@ -29,10 +29,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         textView=(TextView) findViewById(R.id.message);
 
-        HttpClient.checkNumberApi apiStores = HttpClient.retrofit(this).create(HttpClient.checkNumberApi.class);
-        Call<BaseResponse> call = apiStores.checkNumber("18826562075"); //检查号码是否已经注册通过了
+        HttpClient.checkNumberApi checkNumberApi = HttpClient.retrofit(this).create(HttpClient.checkNumberApi.class);
+        Call<BaseResponse> checkNumberCall = checkNumberApi.checkNumber("18826562075"); //检查号码是否已经注册通过了
 
-        new HttpCall().call(call, new HttpCallback() {
+        new HttpCall().call(checkNumberCall, new HttpCallback() {
             @Override
             public void onSuccess(BaseResponse response) {
                 textView.setText(response.getCode()+response.getError());
