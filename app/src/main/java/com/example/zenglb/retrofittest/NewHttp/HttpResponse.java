@@ -1,9 +1,11 @@
 package com.example.zenglb.retrofittest.NewHttp;
 
 /**
+ * 为了避免与正统的Response 重名尴尬，建议修改名称
+ *
  * Created by anylife.zlb@gmail.com on 2016/7/11.
  */
-public class NewBaseResponse<T> {
+public class HttpResponse<T> {
     private int code;
     private String error;
     private T result;
@@ -34,7 +36,7 @@ public class NewBaseResponse<T> {
 
     @Override
     public String toString() {
-        return "NewBaseResponse{" +
+        return "httpResponse{" +
                 "code=" + code +
                 ", error='" + error + '\'' +
                 ", result=" + result +

@@ -1,7 +1,7 @@
 package com.example.zenglb.retrofittest.NewHttp;
 
 /**
- * Created by User on 2016/7/11.
+ * Created by anylife.zlb@gmail.com on 2016/7/11.
  */
 public class LoginResult {
 
