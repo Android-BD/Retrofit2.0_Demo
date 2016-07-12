@@ -22,7 +22,7 @@ import retrofit2.http.Path;
 
 /**
  *Http 请求的设置
- *
+ * Created by Anylife.zlb@gmail.com on 2016/7/11.
  */
 public class xHttpCall{
     //1.测试数据区
@@ -51,7 +51,7 @@ public class xHttpCall{
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     Request originalRequest = chain.request();
-                    if (TextUtils.isEmpty(TOKEN)){
+                    if (TextUtils.isEmpty(TOKEN)){  //然而这并不是动态的。
                         Request authorised = originalRequest.newBuilder()
                                 .addHeader("X-Platform","Android")
                                 .build();
@@ -96,7 +96,7 @@ public class xHttpCall{
          * 检查号码是否存在
          */
         @GET("api/lebang/staffs/mobile/{mobile}")
-        Call<HttpResponse<LoginResult>> checkMobile(@Path("mobile") String mobile);
+        Call<HttpResponse<EasyResult>> checkMobile(@Path("mobile") String mobile);
 
         /**
          * 登录

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.example.zenglb.retrofittest.LoginParams;
+import com.example.zenglb.retrofittest.NewHttp.EasyResult;
 import com.example.zenglb.retrofittest.NewHttp.LoginResult;
 import com.example.zenglb.retrofittest.NewHttp.HttpCallBack;
 import com.example.zenglb.retrofittest.NewHttp.HttpResponse;
@@ -44,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         loginParams.setPassword("zxcv1234");
 
         //2.实例化Http的请求。
-        Call<HttpResponse<LoginResult>> checkMobileCall = xHttpCall.getApiService(this).goLogin(loginParams); //尝试登陆
-        checkMobileCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>() {
+        Call<HttpResponse<LoginResult>> loginCall = xHttpCall.getApiService(this).goLogin(loginParams); //尝试登陆
+        loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>() {
             @Override
             public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
                 Log.e(TAG, loginResultHttpResponse.getResult().toString());
@@ -54,11 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int code,String message) {
-
+                textView.setText(code+"@@@@"+message);      //
             }
         });
-
-
 
 
 
@@ -83,15 +82,38 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        //点击获取天气的接口 ....
+        //点击
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getOrganization();
+//                getOrganization();
+                checkNumber();
+
             }
         });
     }
 
+    /**
+     * 检查号码是否被注册了。
+     */
+    private void checkNumber(){
+        //2.实例化Http的请求。
+
+        //这个时候的response 是一个没有用的response啊！
+        Call<HttpResponse<EasyResult>> checkMobileCall = xHttpCall.getApiService(this).checkMobile("18826562075"); //尝试登陆
+        checkMobileCall.enqueue(new HttpCallBack<HttpResponse<EasyResult>>() {
+            @Override
+            public void onSuccess(HttpResponse<EasyResult> checkMobileHttpResponse) {
+                Log.e(TAG, checkMobileHttpResponse.getResult().toString());
+                textView.setText(checkMobileHttpResponse.getResult().toString());
+            }
+
+            @Override
+            public void onFailure(int code,String message) {
+                textView.setText(code+"@@@@"+message);      //
+            }
+        });
+    }
 
     /**
      * 获取组织架构
@@ -205,31 +227,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    /**
-//     * 请求天气信息...
-//     */
-//    private void getWeather() {
-//        HttpClient.getWeatherApi getWeatherApiStores = HttpClient.retrofit().create(HttpClient.getWeatherApi.class);
-//        Call<WeatherJson> call = getWeatherApiStores.getWeather("101010100");   //北京的天气信息：101010100
-//        call.enqueue(new Callback<WeatherJson>() {
-//            @Override
-//            public void onResponse(Call<WeatherJson> call, Response<WeatherJson> response) {
-//                if(response.isSuccessful()){
-//                    textView.setText(response.body().getWeatherinfo().toString());
-//                }else{
-//                    int sc = response.code();
-//                    textView.setText("ErrorCode:"+sc);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<WeatherJson> call, Throwable t) {
-//                Log.i("wxl", "getWeatherinfo=" + t.toString());
-//                textView.setText("getWeatherinfo=" + t.toString());
-//
-//            }
-//        });
-//    }
+
 
 
 }
