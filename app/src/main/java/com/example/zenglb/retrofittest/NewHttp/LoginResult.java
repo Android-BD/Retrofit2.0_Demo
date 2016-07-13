@@ -1,6 +1,8 @@
 package com.example.zenglb.retrofittest.NewHttp;
 
 /**
+ * 这一类的entity 的定义就直接的放在一个包里面就行了
+ *
  * Created by anylife.zlb@gmail.com on 2016/7/11.
  */
 public class LoginResult {

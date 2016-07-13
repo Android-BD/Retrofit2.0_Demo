@@ -104,8 +104,6 @@ public class xHttpCall{
         @POST("api/lebang/oauth/access_token")
         Call<HttpResponse<LoginResult>> goLogin(@Body LoginParams loginParams);  //设置一下Header！do call
 
-
-
 //        @HTTPS
 //        @Headers("User-Agent: Retrofit2.0Tutorial-App")
 //        @GET("/search/users")

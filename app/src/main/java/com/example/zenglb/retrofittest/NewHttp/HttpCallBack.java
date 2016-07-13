@@ -44,21 +44,10 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
             }
         }
 
-//        if (response.raw().code() == 200) {
-//            if(response.body().getCode()== 0){
-//                onSuccess(response.body());
-////                onSuc(response.body().getResult());  //Object
-//            }else {
-//                onFailure(0,response.body().getError());
-//            }
-//
-//        } else {//失败响应
-//            onFailure(call, new RuntimeException("response error,detail = " + response.raw().toString()));
-//        }
     }
 
     @Override
-    public void onFailure(Call<T> call, Throwable t) {//网络问题会走该回调
+    public void onFailure(Call<T> call, Throwable t) {    //网络问题会走该回调
         if(t instanceof SocketTimeoutException){
             //
         }else if(t instanceof ConnectException){
@@ -66,7 +55,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
         }else if(t instanceof RuntimeException){
             //
         }
-        onFailure(-1,t.getMessage());   //可能吧
+        onFailure(-1,t.getMessage());                      //可能吧
     }
 
 

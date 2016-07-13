@@ -22,8 +22,7 @@ import com.example.zenglb.retrofittest.response.OrganizationResponse;
 import retrofit2.Call;
 
 /**
- * where you are
- * 1
+ * 封装了2种请求样式。
  *
  */
 public class MainActivity extends AppCompatActivity {
