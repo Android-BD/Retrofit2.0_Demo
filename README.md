@@ -1,5 +1,5 @@
 # Retrofit2.0_Demo
-Retrofit2.0 练习使用，依托Retrofit2.0（+okhttp3） 的强大,根据服务器的api再次封装一下。更加简洁的Http请求处理
+Retrofit2.0 练习使用，依托Retrofit2.0（+okhttp3） 的强大,根据服务器的api再次封装一下。更加简洁的Http请求处理.http 包和newhttp是两种封装样式，个人推荐下面的简洁访问样式（newhttp）
 
         //1.登录提交的参数
         LoginParams loginParams=new LoginParams();
