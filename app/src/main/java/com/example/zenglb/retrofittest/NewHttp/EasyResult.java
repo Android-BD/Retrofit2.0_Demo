@@ -6,7 +6,7 @@ package com.example.zenglb.retrofittest.NewHttp;
  * Created by anylife.zlb@gmail.com on 2016/7/11.
  */
 public class EasyResult {
-    private String helloWord="终于明白旅行的意义就是去见一些事一些人，然后说再见";
+    private String helloWord="惊艳了岁月，温暖了时光";
 
     public String getHelloWord() {
         return helloWord;

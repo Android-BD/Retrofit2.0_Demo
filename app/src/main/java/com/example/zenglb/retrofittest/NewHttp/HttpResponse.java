@@ -1,7 +1,11 @@
 package com.example.zenglb.retrofittest.NewHttp;
 
 /**
- * 为了避免与正统的Response 重名尴尬，建议修改名称
+ * 
+ *
+ *
+ *
+ *我想大部分的api 返回的数据都是这种结构的
  *
  * Created by anylife.zlb@gmail.com on 2016/7/11.
  */
