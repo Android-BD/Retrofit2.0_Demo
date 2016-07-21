@@ -2,17 +2,17 @@
 
 假如你的api和github API 一样，请忽视以下内容，关掉本页面。but 假如你的服务器返回的数据格式如下,请往下看：
 
-{
-    "code": 0, 
-    "error": "", 
-    "result": {
-        "access_token": "TYzoqRfQHREwJTqJilISD2pL6tsGAO", 
-        "token_type": "Bearer", 
-        "expires": "2016-01-12 17:13:13", 
-        "refresh_token": "7zVkOEYimZoRkx4WdZuiLAiramBAHN", 
-        "scopes": "all"
-    }
-}
+        {
+            "code": 0,
+                "error": "",
+                "result": {
+            "access_token": "TYzoqRfQHREwJTqJilISD2pL6tsGAO",
+                    "token_type": "Bearer",
+                    "expires": "2016-01-12 17:13:13",
+                    "refresh_token": "7zVkOEYimZoRkx4WdZuiLAiramBAHN",
+                    "scopes": "all"
+        }
+        }
 
 
 Retrofit2.0 练习使用，依托Retrofit2.0（+okhttp3） 的强大,根据服务器的api再次封装一下。更加简洁的Http请求处理.http 包和newhttp是两种封装样式，个人推荐下面的简洁访问样式（在 newhttp 包下面）
