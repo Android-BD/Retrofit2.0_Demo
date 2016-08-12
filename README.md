@@ -8,10 +8,10 @@
             "error": "",
             "result":
                    {
-                       "access_token": "TYzoqRfQHREwJTqJilISD2pL6tsGAO",
+                       "access_token": "if i should see you after long years,how should i greet,",
                        "token_type": "Bearer",
-                       "expires": "2016-01-12 17:13:13",
-                       "refresh_token": "7zVkOEYimZoRkx4WdZuiLAiramBAHN",
+                       "expires": "2016-05-12 17:13:13",
+                       "refresh_token": "with tear? with slience",
                        "scopes": "all"
                    }
         }
@@ -47,3 +47,5 @@ Retrofit2.0 练习使用，依托Retrofit2.0（+okhttp3） 的强大,根据服�
         });
 
 More：any question,please contact me at anylife.zlb@gmail.com
+
+(Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
