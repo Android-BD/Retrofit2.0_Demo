@@ -1,6 +1,7 @@
 # Retrofit2.0_Demo
 
-假如你的api和github API 一样，请忽视以下内容，关掉本页面。but 假如你的服务器返回的数据格式如下,请往下看：
+假如你的Server api和github API 一样Restful 并且返回结果的json样式也是一样。请忽视以下内容，关掉本页面。but 假如你的服务器返回的数据格式大致如下类似,请往下看：
+
 
         {
             "code": 0, 
