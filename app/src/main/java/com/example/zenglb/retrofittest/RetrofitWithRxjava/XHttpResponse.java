@@ -1,11 +1,13 @@
-package com.example.zenglb.retrofittest.http;
+package com.example.zenglb.retrofittest.RetrofitWithRxjava;
 
 /**
+ *
  *我想大部分的api 返回的数据都是这种结构的
  *
  * Created by anylife.zlb@gmail.com on 2016/7/11.
  */
-public class HttpResponse<T> {
+@Deprecated
+public class XHttpResponse<T> {
     private int code;
     private String error;
     private T result;

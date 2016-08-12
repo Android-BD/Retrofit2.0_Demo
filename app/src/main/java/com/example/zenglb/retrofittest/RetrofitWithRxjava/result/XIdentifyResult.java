@@ -1,9 +1,10 @@
-package com.example.zenglb.retrofittest.http.result;
+package com.example.zenglb.retrofittest.RetrofitWithRxjava.result;
 
 /**
  * Created by zenglb on 2016/8/12.
  */
-public class IdentifyResult {
+@Deprecated
+public class XIdentifyResult {
 
     /**
      * is_project : false

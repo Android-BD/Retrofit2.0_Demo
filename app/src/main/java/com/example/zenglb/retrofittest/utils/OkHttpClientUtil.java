@@ -20,7 +20,6 @@ import okhttp3.OkHttpClient;
 /**
  *
  */
-@Deprecated
 public class OkHttpClientUtil {
     private OkHttpClientUtil() {
     }

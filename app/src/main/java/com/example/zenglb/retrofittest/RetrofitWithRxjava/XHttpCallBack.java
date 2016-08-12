@@ -1,24 +1,27 @@
-package com.example.zenglb.retrofittest.http;
+package com.example.zenglb.retrofittest.RetrofitWithRxjava;
+
 import android.util.Log;
 
-import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.utils.TextUtils;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 /**
  * Rename as http callback.
  *
  * Created by Anylife.zlb@gmail.com on 2016/7/11.
  */
-public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T>{
-    private String TAG=HttpCallBack.class.getSimpleName();
-    private static Gson gson = new Gson(); //it is ok ?
+@Deprecated
+public abstract class XHttpCallBack<T extends XHttpResponse> implements Callback<T>{
+    private String TAG=XHttpCallBack.class.getSimpleName();
+    private static Gson gson = new Gson();                 //it is ok ?
 
     @Override
     public void onResponse(Call<T> call, Response<T> response) {
@@ -38,7 +41,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
             }
 
             try {
-                HttpResponse errorResponse = gson.fromJson(errorBodyStr, HttpResponse.class);
+                XHttpResponse errorResponse = gson.fromJson(errorBodyStr, XHttpResponse.class);
                 if(null!=errorResponse){
                     onFailure(errorResponse.getCode(),errorResponse.getError());
                 }else{
