@@ -45,6 +45,32 @@ Retrofit2.0 练习使用，依托Retrofit2.0（+okhttp3） 的强大,根据服�
 
             }
         });
+        
+        
+        
+    /**
+     * 请求身份信息,返回的是List
+     *
+     */
+    private void  requestIdentify(){
+        Call<HttpResponse<List<IdentifyResult>>> getIdentityCall = xHttpCall.getApiService(this).getIdentities(); 
+        getIdentityCall.enqueue(new HttpCallBack<HttpResponse<List<IdentifyResult>>>() {
+            @Override
+            public void onSuccess(HttpResponse<List<IdentifyResult>> getIdentityCallResponse) {
+                Log.e(TAG, getIdentityCallResponse.getResult().toString());
+                textView2.setText(getIdentityCallResponse.getResult().toString());
+            }
+
+            @Override
+            public void onFailure(int code,String message) {
+                textView2.setText(code+"@@@@"+message);
+            }
+        });
+    }
+        
+        
+        
+        
 
 More：any question,please contact me at anylife.zlb@gmail.com
 
