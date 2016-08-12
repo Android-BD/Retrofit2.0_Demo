@@ -6,11 +6,15 @@ import com.example.zenglb.retrofittest.BuildConfig;
 import com.example.zenglb.retrofittest.LoginParams;
 import com.example.zenglb.retrofittest.http.OkHttpClientUtil;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.Authenticator;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.Route;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -21,33 +25,55 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
- *Http 请求的设置
+ * Http 请求的设置
+ *
  * Created by Anylife.zlb@gmail.com on 2016/7/11.
  */
 public class xHttpCall{
     //1.测试数据区
-    private static String TOKEN="";    //暂时的拿过来使用。Bearer dJ1FyRk21bxbxPERuPmujjFLWwgGRO
+    public static String  tempData="";
+    private static String TOKEN;
 
     //2.正式数据定义区域
     private static ApiService apiService;
-//    private static String baseUrl = "https://test.4009515151.com/";
-    private static String baseUrl = "http://10.0.72.52:5000/";
+    private static String baseUrl = "http://test.4009515151.com/";
+//    private static String baseUrl = "http://10.0.72.52:5000/";
 
     public  static ApiService getApiService(Context context) {
         if (apiService == null) {
-            //1.如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator，这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器：
-//            Authenticator mAuthenticator = new Authenticator() {
-//                @Override public Request authenticate(Route route, Response response)
-//                        throws IOException {
+            //1.如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator
+            // 这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器：
+            Authenticator mAuthenticator = new Authenticator() {
+                @Override
+                public Request authenticate(Route route, Response response)
+                        throws IOException {
+
+                    TOKEN=tempData;  //不规范写法
+
+                    return response.request().newBuilder()
+                            .addHeader("Authorization", TOKEN)
+                            .build();
+                }
+            };
+
+
+            Authenticator mAuthenticator2 = new Authenticator() {
+                @Override
+                public Request authenticate(Route route, Response response)
+                        throws IOException {
 //                    Your.sToken = service.refreshToken();
-//                    return response.request().newBuilder()
-//                            .addHeader("Authorization", Your.sToken)
-//                            .build();
-//                }
-//            };
+                    TOKEN=tempData;  //不规范写法
+
+                    return response.request().newBuilder()
+                            .addHeader("Authorization", TOKEN)
+                            .build();
+                }
+            };
+
+
 
             /**
-             * 拦截器，能拦截成功吗？感觉但事后都是一样的东西在运行
+             * 这里只会执行if 的情况
              */
             Interceptor interceptor = new Interceptor() {
                 @Override
@@ -56,26 +82,52 @@ public class xHttpCall{
                     if (TextUtils.isEmpty(TOKEN)){  //然而这并不是动态的。
                         Request authorised = originalRequest.newBuilder()
                                 .addHeader("X-Platform","Android")
+                                .addHeader("Authorization", tempData)    //
+
                                 .build();
                         return chain.proceed(authorised);
                     }else{
                         Request authorised = originalRequest.newBuilder()
                                 .addHeader("X-Platform","Android")
-                                .addHeader("Authorization", TOKEN)    //一般的登录之前，登出之后的api 是不需要token 的。
+                                .addHeader("Authorization", tempData)    //
                                 .build();
                         return chain.proceed(authorised);
                     }
                 }
             };
 
+
+            Interceptor mTokenInterceptor = new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request originalRequest = chain.request();
+                    if (TOKEN == null ){ //|| alreadyHasAuthorizationHeader(originalRequest)) {
+                        return chain.proceed(originalRequest);
+                    }
+                    Request authorised = originalRequest.newBuilder()
+                            .header("Authorization", TOKEN)
+                            .build();
+                    return chain.proceed(authorised);
+                }
+            };
+
+
+
+
+
+
+
+
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+//            loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY );
 
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .addInterceptor(loggingInterceptor)
                     .retryOnConnectionFailure(true)                 //出现错误进行重新的连接？重试几次？错误了有没有回调？
                     .connectTimeout(15, TimeUnit.SECONDS)           //设置超时时间 15 秒
-                    .addNetworkInterceptor(interceptor)             //网络拦截器。
+                    .addNetworkInterceptor(mTokenInterceptor)             //网络拦截器。
+                    .authenticator(mAuthenticator2)
                     .build();
 
             okHttpClient = OkHttpClientUtil.getSSLClient(okHttpClient, context, "cert.crt");
@@ -105,6 +157,17 @@ public class xHttpCall{
          */
         @POST("api/lebang/oauth/access_token")
         Call<HttpResponse<LoginResult>> goLogin(@Body LoginParams loginParams);  //设置一下Header！do call
+
+
+        /**
+         * 登陆后请求校验身份
+         */
+        @GET("api/lebang/staffs/apply/identities")
+        Call<HttpResponse<List<IdentifyResult>>> getIdentities();
+
+
+
+
 
 //        @HTTPS
 //        @Headers("User-Agent: Retrofit2.0Tutorial-App")

@@ -34,6 +34,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
             try {
                 String errorBodyStr= TextUtils.convertUnicode(response.errorBody().string());
                 Log.e(TAG,errorBodyStr);
+                //errorBodyStr is empty or is not a format json text,dispose !!!!!!!!!!!!
                 BaseResponse baseResponse=gson.fromJson(errorBodyStr,BaseResponse.class );
                 if(null!=baseResponse){
                     onFailure(baseResponse.getCode(),baseResponse.getError());
