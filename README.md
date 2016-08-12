@@ -1,6 +1,7 @@
 # Retrofit2.0_Demo
 
-假如你的Server api和github API 一样Restful 并且返回结果的json样式也是一样。请忽视以下内容，关掉本页面。but 假如你的服务器返回的数据格式大致如下类似,请往下看：(本Demo只是单纯的练习再次封装使用Retrofit 2.0,没有Rxjava)
+假如你的Server api和github API 一样Restful 并且返回结果的json样式也是一样。请忽视以下内容，关掉本页面。but 假如你的服务器返回的数据格式大致如下类似,请往下看：
+(本Demo只是单纯的练习再次封装使用Retrofit 2.0,没有结合 Rxjava)
 
 
         {
