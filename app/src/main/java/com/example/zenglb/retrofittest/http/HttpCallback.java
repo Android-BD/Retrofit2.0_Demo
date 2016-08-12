@@ -14,6 +14,7 @@ import retrofit2.Response;
  *
  * @param <T> Successful response body type.
  */
+@Deprecated
 public interface HttpCallback {
 	/**
 	 * http reponse code [200,300)

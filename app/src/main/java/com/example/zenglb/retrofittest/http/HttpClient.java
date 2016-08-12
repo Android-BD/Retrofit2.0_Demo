@@ -42,6 +42,7 @@ import retrofit2.http.Path;
  *
  * Created by zenglb on 2016/7/1.
  */
+@Deprecated
 public class HttpClient {
     private static Retrofit mRetrofit;
     private static final String baseUrl="https://test.4009515151.com/";

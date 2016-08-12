@@ -17,14 +17,14 @@ import retrofit2.Response;
  *
  * Created by Anylife.zlb@gmail.com on 2016/7/11.
  */
-public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T> {
+public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T>{
     private String TAG=HttpCallBack.class.getSimpleName();
     private static Gson gson = new Gson();
 
     @Override
     public void onResponse(Call<T> call, Response<T> response) {
-        if(response.isSuccessful()){                             //Http 状态码code:[200,300）
-            int responseCode=response.body().getCode();          //responseCode是api 里面定义的,进行进一步的数据和事件分发!
+        if(response.isSuccessful()){                                  //Http 状态码code:[200,300）
+            int responseCode=response.body().getCode();               //responseCode是api 里面定义的,进行进一步的数据和事件分发!
             if(responseCode== HttpClient.HTTP_SUCCESS){
                 onSuccess(response.body());
             }else{

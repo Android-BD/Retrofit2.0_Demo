@@ -30,7 +30,9 @@ public class xHttpCall{
 
     //2.正式数据定义区域
     private static ApiService apiService;
-    private static String baseUrl = "https://test.4009515151.com/";
+//    private static String baseUrl = "https://test.4009515151.com/";
+    private static String baseUrl = "http://10.0.72.52:5000/";
+
     public  static ApiService getApiService(Context context) {
         if (apiService == null) {
             //1.如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator，这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器：

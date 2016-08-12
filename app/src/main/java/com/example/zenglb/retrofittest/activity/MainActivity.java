@@ -22,7 +22,8 @@ import com.example.zenglb.retrofittest.response.OrganizationResponse;
 import retrofit2.Call;
 
 /**
- * 封装了2种请求样式。
+ * 封装了2种请求样式，本Demo (包含的api) 仅仅限于交流学习使用，请勿用于其他的用途
+ * 对于不正当使用带来的法律责任，由事由者承担
  *
  */
 public class MainActivity extends AppCompatActivity {
