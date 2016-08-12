@@ -18,7 +18,7 @@ import retrofit2.Response;
  */
 public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T>{
     private String TAG=HttpCallBack.class.getSimpleName();
-    private static Gson gson = new Gson();
+    private static Gson gson = new Gson(); //it is ok ?
 
     @Override
     public void onResponse(Call<T> call, Response<T> response) {
@@ -29,23 +29,20 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
             }else{
                 onFailure(responseCode,response.body().getError());
             }
-        }else{
+        }else{  // 一定要压倒所有的ＣＡＳＥ
             String errorBodyStr="";
             try{
-                 errorBodyStr= TextUtils.convertUnicode(response.errorBody().string());
+                errorBodyStr= TextUtils.convertUnicode(response.errorBody().string());
             }catch (IOException ioe){
                 Log.e("errorBodyStr ioe:",ioe.toString());
             }
-
-//            errorBodyStr=errorBodyStr+"dsa";    //触发json 解析异常！！
 
             try {
                 HttpResponse errorResponse = gson.fromJson(errorBodyStr, HttpResponse.class);
                 if(null!=errorResponse){
                     onFailure(errorResponse.getCode(),errorResponse.getError());
-                    Log.e(TAG, errorResponse.getCode()+"%% %%"+errorResponse.getError());
                 }else{
-                    Log.e(TAG, "errorResponse is null !");
+                    onFailure(-1,"ErrorResponse is null ");
                 }
             } catch (Exception jsonException) {
                 onFailure(-1,"Json 数据解析异常");
