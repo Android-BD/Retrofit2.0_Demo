@@ -8,7 +8,7 @@
             "error": "",
             "result":
                    {
-                       "access_token": "if i should see you after long years,how should i greet,",
+                       "access_token": "if i should see you after long years,how should i greet",
                        "token_type": "Bearer",
                        "expires": "2016-05-12 17:13:13",
                        "refresh_token": "with tear? with slience",
@@ -24,8 +24,8 @@ Retrofit2.0 练习使用，依托Retrofit2.0（+okhttp3） 的强大,根据服�
 
         //1.登录提交的参数
         LoginParams loginParams=new LoginParams();
-        loginParams.setClient_id("43244444444443214321");
-        loginParams.setClient_secret("4444444432222143214321");
+        loginParams.setClient_id("if i should see you after long years,how should i greet");
+        loginParams.setClient_secret("with tear? with slience");
         loginParams.setGrant_type("password");
         loginParams.setUsername("1882656xxxx");
         loginParams.setPassword("dddddd");
