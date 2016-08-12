@@ -1,9 +1,9 @@
-package com.example.zenglb.retrofittest.response;
-
+package com.example.zenglb.retrofittest.http;
 
 /**
+ * 所有的Response 都包含这两项，也可以去添加一个Msg 的字段
  *
- * 所有的Response 都包含这两项
+ * anylife.zlb@gmail.com
  */
 public  class BaseResponse  {
     private int code;

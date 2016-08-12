@@ -5,20 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import com.example.zenglb.retrofittest.LoginParams;
-import com.example.zenglb.retrofittest.NewHttp.EasyResult;
-import com.example.zenglb.retrofittest.NewHttp.IdentifyResult;
-import com.example.zenglb.retrofittest.NewHttp.LoginResult;
-import com.example.zenglb.retrofittest.NewHttp.HttpCallBack;
-import com.example.zenglb.retrofittest.NewHttp.HttpResponse;
-import com.example.zenglb.retrofittest.NewHttp.xHttpCall;
-import com.example.zenglb.retrofittest.R;
+import com.example.zenglb.retrofittest.http.param.LoginParams;
+import com.example.zenglb.retrofittest.http.result.EasyResult;
+import com.example.zenglb.retrofittest.http.result.IdentifyResult;
+import com.example.zenglb.retrofittest.http.result.LoginResult;
+import com.example.zenglb.retrofittest.http.HttpCallBack;
+import com.example.zenglb.retrofittest.http.HttpResponse;
 import com.example.zenglb.retrofittest.http.HttpCall;
-import com.example.zenglb.retrofittest.http.HttpCallback;
-import com.example.zenglb.retrofittest.http.HttpClient;
-import com.example.zenglb.retrofittest.response.BaseResponse;
-import com.example.zenglb.retrofittest.response.LoginResponse;
-import com.example.zenglb.retrofittest.response.OrganizationResponse;
+import com.example.zenglb.retrofittest.R;
 
 import java.util.List;
 
@@ -52,14 +46,13 @@ public class MainActivity extends AppCompatActivity {
         loginParams.setPassword("zxcv1234");
 
         //2.实例化Http的请求。
-        Call<HttpResponse<LoginResult>> loginCall = xHttpCall.getApiService(this).goLogin(loginParams); //尝试登陆
+        Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(this).goLogin(loginParams); //尝试登陆
         loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>() {
             @Override
             public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
                 Log.e(TAG, loginResultHttpResponse.getResult().toString());
                 textView.setText(loginResultHttpResponse.getResult().toString());
-
-                xHttpCall.tempData="Bearer "+loginResultHttpResponse.getResult().getAccessToken();
+                HttpCall.tempData="Bearer "+loginResultHttpResponse.getResult().getAccessToken();
             }
 
             @Override
@@ -73,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                getOrganization();
                 checkNumber();
             }
         });
@@ -92,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     private void  requestIdentify(){
-        Call<HttpResponse<List<IdentifyResult>>> getIdentityCall = xHttpCall.getApiService(this).getIdentities(); //尝试登陆
+        Call<HttpResponse<List<IdentifyResult>>> getIdentityCall = HttpCall.getApiService(this).getIdentities(); //尝试登陆
         getIdentityCall.enqueue(new HttpCallBack<HttpResponse<List<IdentifyResult>>>() {
             @Override
             public void onSuccess(HttpResponse<List<IdentifyResult>> getIdentityCallResponse) {
@@ -115,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkNumber(){
         //2.实例化Http的请求。
         //这个时候的response 是一个没有用的response啊！
-        Call<HttpResponse<EasyResult>> checkMobileCall = xHttpCall.getApiService(this).checkMobile("18812345678"); //尝试登陆
+        Call<HttpResponse<EasyResult>> checkMobileCall = HttpCall.getApiService(this).checkMobile("18812345678"); //尝试登陆
         checkMobileCall.enqueue(new HttpCallBack<HttpResponse<EasyResult>>() {
             @Override
             public void onSuccess(HttpResponse<EasyResult> checkMobileHttpResponse) {

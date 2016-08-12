@@ -1,4 +1,4 @@
-package com.example.zenglb.retrofittest.NewHttp;
+package com.example.zenglb.retrofittest.http.result;
 
 /**
  * Created by zenglb on 2016/8/12.

@@ -1,4 +1,4 @@
-package com.example.zenglb.retrofittest.http;
+package com.example.zenglb.retrofittest.utils;
 
 import android.content.Context;
 
@@ -20,6 +20,7 @@ import okhttp3.OkHttpClient;
 /**
  *
  */
+@Deprecated
 public class OkHttpClientUtil {
     private OkHttpClientUtil() {
     }

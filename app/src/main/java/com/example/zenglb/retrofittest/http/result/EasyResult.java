@@ -1,4 +1,4 @@
-package com.example.zenglb.retrofittest.NewHttp;
+package com.example.zenglb.retrofittest.http.result;
 
 /**
  * 有些API result 字段返回的没有任何的意义，就传这个吧，比如检查手机是否存在

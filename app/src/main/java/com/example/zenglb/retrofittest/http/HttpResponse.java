@@ -1,8 +1,7 @@
-package com.example.zenglb.retrofittest.NewHttp;
+package com.example.zenglb.retrofittest.http;
 
 /**
- *
- *
+ * HttpResponse 和Base Response 能否合并
  *
  *我想大部分的api 返回的数据都是这种结构的
  *

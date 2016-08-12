@@ -1,4 +1,4 @@
-package com.example.zenglb.retrofittest;
+package com.example.zenglb.retrofittest.http.param;
 
 /**
  * 登录需要提交的参数

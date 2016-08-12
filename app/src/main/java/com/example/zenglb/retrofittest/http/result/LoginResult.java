@@ -1,18 +1,11 @@
-package com.example.zenglb.retrofittest.response;
+package com.example.zenglb.retrofittest.http.result;
 
 /**
- * Created by chenfm01 on 2015/8/12.
+ * 这一类的entity 的定义就直接的放在一个包里面就行了
+ *
+ * Created by anylife.zlb@gmail.com on 2016/7/11.
  */
-public class LoginResponse extends BaseResponse{
-
-    private Result result;
-
-    public LoginResponse(int code, String error, Result result) {
-        super(code, error);
-        this.result = result;
-    }
-
-    public class Result {
+public class LoginResult {
 
         private String access_token;
         private String token_type;
@@ -70,13 +63,5 @@ public class LoginResponse extends BaseResponse{
                     ", expires=" + expires +
                     '}';
         }
-    }
 
-    public Result getResult() {
-        return result;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
-    }
 }
