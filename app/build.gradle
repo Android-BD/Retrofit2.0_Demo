@@ -22,7 +22,6 @@ android {
     dataBinding {    //MVVP: https://developer.android.com/topic/libraries/data-binding/index.html?hl=zh-cn#build_environment
         enabled = true
     }
-
 }
 
 dependencies {

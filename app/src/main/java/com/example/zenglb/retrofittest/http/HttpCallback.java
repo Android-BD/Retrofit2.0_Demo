@@ -1,6 +1,7 @@
 package com.example.zenglb.retrofittest.http;
 import android.util.Log;
 
+import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.utils.TextUtils;
 import com.google.gson.Gson;
 
@@ -23,25 +24,35 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
     public void onResponse(Call<T> call, Response<T> response) {
         if(response.isSuccessful()){                                  //Http 状态码code:[200,300）
             int responseCode=response.body().getCode();               //responseCode是api 里面定义的,进行进一步的数据和事件分发!
-            if(responseCode== 200){
+            if(responseCode== 0){
                 onSuccess(response.body());
             }else{
                 onFailure(responseCode,response.body().getError());
             }
         }else{
-            try {
-                String errorBodyStr= TextUtils.convertUnicode(response.errorBody().string());
-                Log.e(TAG,errorBodyStr);
-                //errorBodyStr is empty or is not a format json text,dispose !!!!!!!!!!!!
-                BaseResponse baseResponse=gson.fromJson(errorBodyStr,BaseResponse.class );
-                if(null!=baseResponse){
-                    onFailure(baseResponse.getCode(),baseResponse.getError());
-                    Log.e(TAG, baseResponse.getCode()+"%% %%"+baseResponse.getError());
-                }
-            }catch (IOException e){
-                e.printStackTrace();
+            String errorBodyStr="";
+            try{
+                 errorBodyStr= TextUtils.convertUnicode(response.errorBody().string());
+            }catch (IOException ioe){
+                Log.e("errorBodyStr ioe:",ioe.toString());
             }
-        }
+
+//            errorBodyStr=errorBodyStr+"dsa";    //触发json 解析异常！！
+
+            try {
+                HttpResponse errorResponse = gson.fromJson(errorBodyStr, HttpResponse.class);
+                if(null!=errorResponse){
+                    onFailure(errorResponse.getCode(),errorResponse.getError());
+                    Log.e(TAG, errorResponse.getCode()+"%% %%"+errorResponse.getError());
+                }else{
+                    Log.e(TAG, "errorResponse is null !");
+                }
+            } catch (Exception jsonException) {
+                onFailure(-1,"Json 数据解析异常");
+                jsonException.printStackTrace();
+            }
+
+        }//response is not Successful dispose over !
 
     }
 

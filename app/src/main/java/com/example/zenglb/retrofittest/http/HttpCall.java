@@ -43,9 +43,9 @@ public class HttpCall {
 
     public  static ApiService getApiService(Context context) {
         if (apiService == null) {
+
             //1.如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator
             // 这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器：
-
             Authenticator mAuthenticator2 = new Authenticator() {
                 @Override
                 public Request authenticate(Route route, Response response)
@@ -81,7 +81,7 @@ public class HttpCall {
                     .addInterceptor(loggingInterceptor)
                     .retryOnConnectionFailure(true)                 //出现错误进行重新的连接？重试几次？错误了有没有回调？
                     .connectTimeout(15, TimeUnit.SECONDS)           //设置超时时间 15 秒
-                    .addNetworkInterceptor(mTokenInterceptor)             //网络拦截器。
+                    .addNetworkInterceptor(mTokenInterceptor)       //网络拦截器。
                     .authenticator(mAuthenticator2)
                     .build();
 
@@ -94,6 +94,7 @@ public class HttpCall {
                     .build();
             apiService = client.create(ApiService.class);
         }
+
         return apiService;
     }
 

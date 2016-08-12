@@ -22,13 +22,12 @@ import retrofit2.Call;
  * 封装了2种请求样式，本Demo (包含的api) 仅仅限于交流学习使用，请勿用于其他的用途
  * 对于不正当使用带来的法律责任，由事由者承担
  *
- * anylife
+ * anylife.zlb@gamil.com
  */
 public class MainActivity extends AppCompatActivity {
     private final String TAG=MainActivity.class.getSimpleName();
     private TextView textView;
     private TextView textView2;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText(code+"  !!!  "+message);      //
             }
         });
-
 
         //点击检查号码是否注册过了
         textView.setOnClickListener(new View.OnClickListener() {
@@ -121,5 +119,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 }
