@@ -43,7 +43,6 @@ Retrofit2.0 练习使用，依托Retrofit2.0（+okhttp3） 的强大,根据服�
             @Override
             public void onFailure(int code,String message) {
                 textView.setText(code+"@@@@"+message);
-
             }
         });
         
