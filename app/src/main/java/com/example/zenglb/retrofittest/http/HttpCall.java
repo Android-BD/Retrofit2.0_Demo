@@ -36,7 +36,7 @@ public class HttpCall {
     public static String  tempData="";
     private static String TOKEN;
 
-    //2.正式数据定义区域
+    //2.正式数据定义区域,FBI WARMING,请不要把分享数据用作其他用途
     private static ApiService apiService;
     private static String baseUrl = "https://test.4009515151.com/";
 //    private static String baseUrl = "http://10.0.72.52:5000/";
