@@ -58,8 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int code,String message) {
-                textView.setText(code+"  !!!  "+message);      //
+                textView.setText(code+"  !!!  "+message);
             }
+
         });
 
         //点击检查号码是否注册过了
