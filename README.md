@@ -54,7 +54,7 @@ https://developer.github.com/v3/orgs/#list-your-organizations
 	} //
 
 
-//=============================================================================================================
+//======================在Vanke zhuzher App Test App==== 
 
         //1.登录提交的参数
         LoginParams loginParams=new LoginParams();
