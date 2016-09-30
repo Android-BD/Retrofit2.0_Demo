@@ -5,7 +5,7 @@
 
 假如你的Server api和github API V3一样Restful 并且返回结果的json样式也是一样;请忽视以下内容，关掉本页面。
 but 假如你的服务器返回的数据格式大致如下类似,请往下看：
-(本Demo只是单纯的练习再次封装使用Retrofit 2.0,目前还没有结合 Rxjava)
+
 
 
         {
@@ -22,9 +22,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
         }
 
 
-Retrofit2.0 练习使用，依托Retrofit2.0（+okhttp3） 的强大,根据服务器的api再次封装一下。更加简洁的Http请求处理.http 包和newhttp是两种封装样式，个人推荐下面的简洁访问样式
-
-如果你喜欢，give me a Star, thank you.
+根据服务器的api再次封装一下。更加简洁的Http请求处理.http 包和newhttp是两种封装样式，个人推荐下面的简洁访问样式
 
 
 https://developer.github.com/v3/orgs/#list-your-organizations
@@ -36,7 +34,7 @@ https://developer.github.com/v3/orgs/#list-your-organizations
         Call<List<Repositories>> getRepositories(@Query("page") int page);
         
         /**
-	 *获取Repositories 数据
+	 *  获取Repositories 数据
 	 */
 	private void getRepositories(final int page){
 		Call<List<Repositories>> newsCall = HttpCall.getApiService(mActivity).getRepositories(page);
@@ -54,7 +52,14 @@ https://developer.github.com/v3/orgs/#list-your-organizations
 	} //
 
 
-//======================在Vanke zhuzher App Test App==== 
+
+![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/device-2016-09-30-170835.png)
+
+
+
+
+
+//======================在Vanke zhuzher App Test App=================================== 
 
         //1.登录提交的参数
         LoginParams loginParams=new LoginParams();
