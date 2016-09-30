@@ -1,6 +1,10 @@
 # Retrofit2.0_Demo
 
-假如你的Server api和github API 一样Restful 并且返回结果的json样式也是一样。请忽视以下内容，关掉本页面。but 假如你的服务器返回的数据格式大致如下类似,请往下看：
+
+如果所有api 返回格式都和github api v3 一样Restful,那直接的使用也会很爽，但是由于不同的业务场景并不会一样
+
+假如你的Server api和github API V3一样Restful 并且返回结果的json样式也是一样;请忽视以下内容，关掉本页面。
+but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 (本Demo只是单纯的练习再次封装使用Retrofit 2.0,目前还没有结合 Rxjava)
 
 
@@ -22,6 +26,35 @@ Retrofit2.0 练习使用，依托Retrofit2.0（+okhttp3） 的强大,根据服�
 
 如果你喜欢，give me a Star, thank you.
 
+
+https://developer.github.com/v3/orgs/#list-your-organizations
+
+        /**
+         * List your repositories
+         */
+        @GET("/user/repos")
+        Call<List<Repositories>> getRepositories(@Query("page") int page);
+        
+        /**
+	 *获取Repositories 数据
+	 */
+	private void getRepositories(final int page){
+		Call<List<Repositories>> newsCall = HttpCall.getApiService(mActivity).getRepositories(page);
+		newsCall.enqueue(new HttpCallBack<List<Repositories>>() {
+			@Override
+			public void onSuccess(List<Repositories> repositiories) {
+				Log.d("Repositories",repositiories.toString());
+			}
+
+			@Override
+			public void onFailure(int code, String message) {
+
+			}
+		});
+	} //
+
+
+//=============================================================================================================
 
         //1.登录提交的参数
         LoginParams loginParams=new LoginParams();
