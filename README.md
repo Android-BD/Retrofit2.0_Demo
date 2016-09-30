@@ -53,39 +53,7 @@ https://developer.github.com/v3/orgs/#list-your-organizations
 
 
 
-
-
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/device-2016-09-30-170835.png)
-
-
-
-
-
-
-*
-*
-*
-*
-*
-*
-*
-*
-*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
