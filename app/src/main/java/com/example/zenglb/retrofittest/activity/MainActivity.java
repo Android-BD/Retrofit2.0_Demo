@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         textView=(TextView) findViewById(R.id.message);
         textView2=(TextView) findViewById(R.id.message2);
 
+        
+        //良好的互联网环境需要大家的共同努力，对于不正当使用带来的法律责任，由事由者承担
         //1.参数的封装
         LoginParams loginParams=new LoginParams();
         loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
