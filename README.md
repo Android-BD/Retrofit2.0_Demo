@@ -68,8 +68,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 。
 。
 
-
-//==================================== 在Vanke zhuzher App Test App ======================================= 
+//=========================在Vanke zhuzher App Test App ==========================
 
         //1.登录提交的参数
         LoginParams loginParams=new LoginParams();
