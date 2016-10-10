@@ -24,13 +24,13 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
 根据服务器的api再次封装一下。更加简洁的Http请求处理.个人推荐下面的简洁访问样式（api 由github 提供）
 
-        /**
-         * List your repositories
-         */
-        @GET("/user/repos")
-        Call<List<Repositories>> getRepositories(@Query("page") int page);
+     /**
+      * List your repositories
+      */
+     @GET("/user/repos")
+     Call<List<Repositories>> getRepositories(@Query("page") int page);
     
-        /**
+    /**
 	 * 获取Repositories 数据
 	 */
 	private void getRepositories(final int page){
