@@ -24,9 +24,6 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
 根据服务器的api再次封装一下。更加简洁的Http请求处理.http 包和newhttp是两种封装样式，个人推荐下面的简洁访问样式
 
-
-https://developer.github.com/v3/orgs/#list-your-organizations
-
         /**
          * List your repositories
          */
@@ -34,7 +31,7 @@ https://developer.github.com/v3/orgs/#list-your-organizations
         Call<List<Repositories>> getRepositories(@Query("page") int page);
         
         /**
-	 *  获取Repositories 数据
+	 * 获取Repositories 数据
 	 */
 	private void getRepositories(final int page){
 		Call<List<Repositories>> newsCall = HttpCall.getApiService(mActivity).getRepositories(page);
@@ -50,16 +47,29 @@ https://developer.github.com/v3/orgs/#list-your-organizations
 			}
 		});
 	} //
+	
+上面的例子使用的是github 的api (V3)。   https://developer.github.com/v3/orgs/#list-your-organizations
+
+。
+。
+。
+。
+。
+。
+。
+。
+。
+。
+。
+。
+。
+。
+。
+。
+。
 
 
-
-![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/device-2016-09-30-170835.png)
-
-
-
-
-
-//======================在Vanke zhuzher App Test App=================================== 
+//==================================== 在Vanke zhuzher App Test App ======================================= 
 
         //1.登录提交的参数
         LoginParams loginParams=new LoginParams();
