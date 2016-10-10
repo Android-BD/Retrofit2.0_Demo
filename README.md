@@ -51,7 +51,9 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 上面的例子使用的是github 的api (V3)。   https://developer.github.com/v3/orgs/#list-your-organizations
 
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
-
+*
+More：
+*
 //=========================在Vanke zhuzher App Test App ==========================
 
         //1.登录提交的参数
