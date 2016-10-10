@@ -1,5 +1,5 @@
 # Retrofit2.0_Demo
-
+![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
 如果所有api 返回格式都和github api v3 一样Restful,那直接的使用也会很爽，但是由于不同的业务场景并不会一样
 
@@ -29,7 +29,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
          */
         @GET("/user/repos")
         Call<List<Repositories>> getRepositories(@Query("page") int page);
-        
+    
         /**
 	 * 获取Repositories 数据
 	 */
@@ -50,22 +50,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 	
 上面的例子使用的是github 的api (V3)。   https://developer.github.com/v3/orgs/#list-your-organizations
 
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
+![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
 //=========================在Vanke zhuzher App Test App ==========================
 
