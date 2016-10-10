@@ -60,8 +60,10 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(int code,String message) {
                 textView.setText(code+"  !!!  "+message);
             }
-
         });
+
+
+
 
         //点击检查号码是否注册过了
         textView.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         //点击请求身份
         textView2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 requestIdentify();
             }
         });
+
+
+
     }
 
     /**
@@ -99,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     /**
      * 检查号码是否被注册了。
