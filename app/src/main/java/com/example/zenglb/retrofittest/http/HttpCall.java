@@ -28,6 +28,9 @@ import retrofit2.http.Path;
 
 /**
  * Http 请求的设置
+ * 1.Cancel req
+ *
+ *
  *
  * Created by Anylife.zlb@gmail.com on 2016/7/11.
  */

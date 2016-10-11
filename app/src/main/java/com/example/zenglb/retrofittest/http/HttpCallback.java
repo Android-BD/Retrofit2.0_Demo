@@ -29,7 +29,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
             }else{
                 onFailure(responseCode,response.body().getError());
             }
-        }else{  // 一定要压倒所有的ＣＡＳＥ
+        }else{  // 一定要压倒所有case
             String errorBodyStr="";
             try{
                 errorBodyStr= TextUtils.convertUnicode(response.errorBody().string());
