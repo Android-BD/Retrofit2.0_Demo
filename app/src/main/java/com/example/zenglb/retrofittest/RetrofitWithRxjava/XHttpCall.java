@@ -6,7 +6,7 @@ import com.example.zenglb.retrofittest.RetrofitWithRxjava.param.XLoginParams;
 import com.example.zenglb.retrofittest.RetrofitWithRxjava.result.XEasyResult;
 import com.example.zenglb.retrofittest.RetrofitWithRxjava.result.XIdentifyResult;
 import com.example.zenglb.retrofittest.RetrofitWithRxjava.result.XLoginResult;
-import com.example.zenglb.retrofittest.utils.OkHttpClientUtil;
+import com.example.zenglb.retrofittest.utils.httpUtils.OkHttpClientUtil;
 
 import java.io.IOException;
 import java.util.List;

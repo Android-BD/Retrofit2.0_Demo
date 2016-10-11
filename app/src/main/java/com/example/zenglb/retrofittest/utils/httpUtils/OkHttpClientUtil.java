@@ -1,4 +1,4 @@
-package com.example.zenglb.retrofittest.utils;
+package com.example.zenglb.retrofittest.utils.httpUtils;
 
 import android.content.Context;
 

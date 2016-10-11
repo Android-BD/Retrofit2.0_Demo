@@ -6,7 +6,7 @@ import com.example.zenglb.retrofittest.http.param.LoginParams;
 import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.IdentifyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
-import com.example.zenglb.retrofittest.utils.OkHttpClientUtil;
+import com.example.zenglb.retrofittest.utils.httpUtils.OkHttpClientUtil;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
