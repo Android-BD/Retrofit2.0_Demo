@@ -23,7 +23,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 ```
 
 根据服务器的api再次封装一下。更加简洁的Http请求处理.个人推荐下面的简洁访问样式（api 由github 提供）
-
+```
      /**
       * List your repositories
       */
@@ -48,7 +48,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 			}
 		});
 	} //
-	
+```
 上面的例子使用的是github 的api (V3)。   https://developer.github.com/v3/orgs/#list-your-organizations
 
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
@@ -56,7 +56,8 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
 
 
-#//在Vanke zhuzher App Test App 的使用，更多见代码
+#在Vanke zhuzher App Test App 的使用，更多见代码
+```
 
         //1.登录提交的参数
         LoginParams loginParams=new LoginParams();
@@ -105,7 +106,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
         });
     }
         
-
+```
 More：any question,please contact me at anylife.zlb@gmail.com
 
 (Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
