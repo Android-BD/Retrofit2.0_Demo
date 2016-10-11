@@ -35,7 +35,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 	 */
 	private void getRepositories(final int page){
 		Call<List<Repositories>> newsCall = HttpCall.getApiService(mActivity).getRepositories(page);
-		newsCall.enqueue(new HttpCallBack<List<Repositories>>() {
+		newsCall.enqueue(new HttpCallBack<List<Repositories>>(this) {
 			@Override
 			public void onSuccess(List<Repositories> repositiories) {
 				Log.d("Repositories",repositiories.toString());
@@ -43,6 +43,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
 			@Override
 			public void onFailure(int code, String message) {
+			    super.onFailure(code,message);
 
 			}
 		});
@@ -67,7 +68,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
         //2.实例化Http的请求。泛型语法比较晦涩，然而我感觉很精简
         Call<HttpResponse<LoginResult>> checkMobileCall = xHttpCall.getApiService(this).goLogin(loginParams); //尝试登陆
-        checkMobileCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>() {
+        checkMobileCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
             @Override
             public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
                 Log.e(TAG, loginResultHttpResponse.getResult());
@@ -76,6 +77,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
             @Override
             public void onFailure(int code,String message) {
+            	super.onFailure(code,message);
                 textView.setText(code+"@@@@"+message);
             }
         });
@@ -88,7 +90,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
      */
     private void  requestIdentify(){
         Call<HttpResponse<List<IdentifyResult>>> getIdentityCall = xHttpCall.getApiService(this).getIdentities(); 
-        getIdentityCall.enqueue(new HttpCallBack<HttpResponse<List<IdentifyResult>>>() {
+        getIdentityCall.enqueue(new HttpCallBack<HttpResponse<List<IdentifyResult>>>(this) {
             @Override
             public void onSuccess(HttpResponse<List<IdentifyResult>> getIdentityCallResponse) {
                 Log.e(TAG, getIdentityCallResponse.getResult().toString());
@@ -97,6 +99,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
             @Override
             public void onFailure(int code,String message) {
+            	super.onFailure(code,message);
                 textView2.setText(code+"@@@@"+message);
             }
         });
