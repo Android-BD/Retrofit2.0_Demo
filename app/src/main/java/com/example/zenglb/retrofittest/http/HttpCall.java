@@ -43,7 +43,7 @@ public class HttpCall {
 
     //2.正式数据定义区域,FBI WARMING,请不要把分享数据用作其他用途
     private static ApiService apiService;
-    private static String baseUrl = "https://test.4009515151.com/";
+    private static String baseUrl = "https://test.4009515151.com/";  //我想你是个好人
 
 	/**
 	 * 设置Token
@@ -54,15 +54,21 @@ public class HttpCall {
 
     public  static ApiService getApiService(Context context) {
         if (apiService == null) {
-            //1.如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator
-            // 这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器：
+			/**
+             * 1
+             * 这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器：
+			 * 如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator
+             */
             Authenticator mAuthenticator2 = new Authenticator() {
                 @Override
                 public Request authenticate(Route route, Response response)
                         throws IOException {
-                    if(TextUtils.isEmpty(TOKEN)){
-                        return response.request();
-                    }
+
+//                    Your.sToken = service.refreshToken();
+//                    return response.request().newBuilder()
+//                            .addHeader("Authorization", newAccessToken)
+//                            .build();
+
 
                     return response.request().newBuilder()
                             .addHeader("Authorization", TOKEN)
@@ -70,27 +76,36 @@ public class HttpCall {
                 }
             };
 
-            //
+			/**
+			 * 2.
+             *那个 if 判断意思是，如果你的 token 是空的，就是还没有请求到 token，比如对于登陆请求，是没有 token 的，
+             * 只有等到登陆之后才有 token，这时候就不进行附着上 token。另外，如果你的请求中已经带有验证 header 了，
+             * 比如你手动设置了一个另外的 token，那么也不需要再附着这一个 token.
+             *
+             * 如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator，
+             * 这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器
+             *
+             */
             Interceptor mTokenInterceptor = new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     Request originalRequest = chain.request();
-//
-//                    if (TOKEN == null ){ //|| alreadyHasAuthorizationHeader(originalRequest)) {
-//                        return chain.proceed(originalRequest);
-//                    }
-//                    Request authorised = originalRequest.newBuilder()
-//                            .header("Authorization", TOKEN)
-//                            .build();
+
+                    if (TOKEN == null || alreadyHasAuthorizationHeader(originalRequest)) {
+                        return chain.proceed(originalRequest);
+                    }
+                    Request authorised = originalRequest.newBuilder()
+                            .header("Authorization", TOKEN)
+                            .build();
 
                     return chain.proceed(originalRequest);
                 }
             };
 
 
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 //            loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY );
+//            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY );
 
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .retryOnConnectionFailure(true)                 //出现错误进行重新的连接？重试几次？错误了有没有回调？
@@ -103,13 +118,25 @@ public class HttpCall {
             okHttpClient = OkHttpClientUtil.getSSLClient(okHttpClient, context, "cert.crt");
 
             Retrofit client = new Retrofit.Builder()
-                    .baseUrl(baseUrl)       //配置成为动态改变的，不要写死在里面
+                    .baseUrl(baseUrl)
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             apiService = client.create(ApiService.class);
         }
         return apiService;
+    }
+
+	/**
+	 * 判断是否请求中含有了Author
+     *
+     * @param originalRequest
+     */
+    private static boolean alreadyHasAuthorizationHeader(Request originalRequest){
+        if(originalRequest.headers().toString().contains("Authorization")){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -131,6 +158,12 @@ public class HttpCall {
          */
         @POST("api/lebang/oauth/access_token")
         Call<HttpResponse<LoginResult>> goLogin(@Body LoginParams loginParams);  //设置一下Header！do call
+
+		/**
+		 * 刷新Token
+         */
+        @POST("api/lebang/oauth/access_token")
+        Call<HttpResponse<LoginResult>> refreshToken(@Body LoginParams loginParams);  //设置一下Header！do call
 
         /**
          * 登陆后请求校验身份

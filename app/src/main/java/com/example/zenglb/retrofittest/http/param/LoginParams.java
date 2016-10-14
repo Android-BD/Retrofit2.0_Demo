@@ -9,8 +9,18 @@ public class LoginParams {
     private String client_id;
     private String client_secret;
     private String username;
+    private String refreshToken;
     private String password;
+
     private String scope;
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
     public String getGrant_type() {
         return grant_type;

@@ -1,7 +1,5 @@
 package com.example.zenglb.retrofittest.activity;
 
-import android.app.AlarmManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,20 +16,21 @@ import com.example.zenglb.retrofittest.http.result.IdentifyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
 
 import java.util.List;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 
 /**
  * Http 的错误统一处理
- *
- *
+ * <p>
+ * <p>
  * anylife.zlb@gamil.com
  */
 public class MainActivity extends BaseActivity {
 	private final String TAG = MainActivity.class.getSimpleName();
 	private TextView message;
-	private TextView textView1,textView2,textView3;
+	private TextView textView1, textView2, textView3, textView4;
+
+	private String refreshToken;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +40,7 @@ public class MainActivity extends BaseActivity {
 		textView1 = (TextView) findViewById(R.id.test1);
 		textView2 = (TextView) findViewById(R.id.test2);
 		textView3 = (TextView) findViewById(R.id.test3);
-
-
+		textView4 = (TextView) findViewById(R.id.test4);
 
 //		TimeZone timeZone = TimeZone.getDefault();
 //		String id = timeZone.getID(); //获取时区id
@@ -53,7 +51,6 @@ public class MainActivity extends BaseActivity {
 //		mAlarmManager.setTimeZone("GMT+08:00");
 
 
-
 		//点击检查号码是否注册过了
 		textView1.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -62,11 +59,11 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
-		//点击请求身份
+		//点击请求请求
 		textView2.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-                testLogin();
+				testLogin();
 			}
 		});
 
@@ -78,25 +75,61 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
+		//点击请求身份
+		textView4.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				refreshToken();
+			}
+		});
+
+	}
+
+	/**
+	 * 刷新Token
+	 */
+	private void refreshToken() {
+		//良好的互联网环境需要大家的共同努力，对于不正当使用带来的法律责任，由事由者承担
+		//1.参数的封装
+		LoginParams loginParams = new LoginParams();
+		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
+		loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
+		loginParams.setGrant_type("grant_type");
+		loginParams.setRefreshToken("");
+
+		//2.实例化Http的请求。Call 语法看起来很繁琐，但是这也是Java的基础
+		Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(this).refreshToken(loginParams); //刷新Token
+		loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
+			@Override
+			public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
+				Log.e(TAG, loginResultHttpResponse.getResult().toString());
+				message.setText(loginResultHttpResponse.getResult().toString());
+				HttpCall.setToken("Bearer " + loginResultHttpResponse.getResult().getAccessToken());
+				refreshToken=loginResultHttpResponse.getResult().getRefreshToken();
+			}
+
+			@Override
+			public void onFailure(int code, String messageStr) {
+				super.onFailure(code, messageStr);
+				message.setText(code + "  !loginCall!  " + messageStr);
+			}
+		});
 	}
 
 
 	/**
 	 * 测试登录
 	 */
-	private void testLogin(){
+	private void testLogin() {
 		//良好的互联网环境需要大家的共同努力，对于不正当使用带来的法律责任，由事由者承担
 		//1.参数的封装
 		LoginParams loginParams = new LoginParams();
 
-
-
-		loginParams.setClient_id("5e96eac06151d0c32e2dd9554d7ee167ce");
-		loginParams.setClient_secret("aCE34n843Y277n3829S7P43cMN8qANF8Fh");
-
+		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
+		loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
 
 		loginParams.setGrant_type("password");
-		loginParams.setUsername("18826562076");
+		loginParams.setUsername("18826562075");
 		loginParams.setPassword("zxcv1234");
 
 		//2.实例化Http的请求。Call 语法看起来很繁琐，但是这也是Java的基础
@@ -107,22 +140,20 @@ public class MainActivity extends BaseActivity {
 				Log.e(TAG, loginResultHttpResponse.getResult().toString());
 				message.setText(loginResultHttpResponse.getResult().toString());
 				HttpCall.setToken("Bearer " + loginResultHttpResponse.getResult().getAccessToken());
+				refreshToken=loginResultHttpResponse.getResult().getRefreshToken();
 			}
 
 			@Override
 			public void onFailure(int code, String messageStr) {
-				super.onFailure(code,messageStr);
+				super.onFailure(code, messageStr);
 				message.setText(code + "  !loginCall!  " + messageStr);
 			}
 		});
 	}
 
 
-
-
 	/**
 	 * 请求身份信息
-	 *
 	 */
 	private void requestIdentify() {
 		Call<HttpResponse<List<IdentifyResult>>> getIdentityCall = HttpCall.getApiService(this).getIdentities(); //尝试登陆
@@ -158,7 +189,7 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			public void onFailure(int code, String messageStr) {
-				super.onFailure(code,messageStr);
+				super.onFailure(code, messageStr);
 				message.setText(code + "@@checkMobileCall@@" + messageStr);      //
 			}
 		});

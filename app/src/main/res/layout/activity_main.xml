@@ -29,7 +29,6 @@
         android:layout_below="@+id/message"
         android:layout_marginTop="50dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-
         android:textColor="@color/colorAccent"
         android:text="检查号码是否已经被注册" />
 
@@ -41,7 +40,6 @@
         android:layout_marginTop="50dp"
         android:textColor="@color/colorAccent"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-
         android:text="登录" />
 
     <TextView
@@ -50,9 +48,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/message"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-
         android:layout_marginTop="50dp"
         android:textColor="@color/colorAccent"
         android:text="身份信息" />
+
+
+    <TextView
+        android:id="@+id/test4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/message"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/colorAccent"
+        android:text="刷新Token" />
 
 </LinearLayout>
