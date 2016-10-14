@@ -1,6 +1,9 @@
 # Retrofit2.0_Demo
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
+>  Retrofit2 官方：http://square.github.io/retrofit/
+   Retrofit2 教程：http://www.jianshu.com/p/308f3c54abdd
+
 如果所有api 返回格式都和github api v3 一样Restful,那直接的使用也会很爽，但是由于不同的业务场景并不会一样
 
 假如你的Server api和github API V3一样Restful 并且返回结果的json样式也是一样;请忽视以下内容，关掉本页面。

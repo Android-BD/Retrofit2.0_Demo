@@ -8,15 +8,18 @@ import android.support.annotation.CallSuper;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+
 import com.example.zenglb.retrofittest.R;
-import com.example.zenglb.retrofittest.utils.httpUtils.HttpDialogUtils;
 import com.example.zenglb.retrofittest.utils.TextUtils;
+import com.example.zenglb.retrofittest.utils.httpUtils.HttpDialogUtils;
 import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.net.UnknownServiceException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -89,6 +92,16 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 				onFailure(responseCode, response.body().getError());
 			}
 		} else {  // 一定要压倒所有case
+
+
+			//================ test http 400-http 500 错误=================
+			int code=response.raw().code();
+			String message =response.raw().message();
+
+
+			//================ test http 400-http 500 错误=================
+
+
 			String errorBodyStr = "";
 			try {
 				errorBodyStr = TextUtils.convertUnicode(response.errorBody().string());
@@ -113,6 +126,8 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 	}
 
 	/**
+	 * 区别处理Htpp error 和 业务逻辑的Error code ,如果有重复，需要区别处理
+	 *
 	 * Invoked when a network exception occurred talking to the server or when an unexpected
 	 * exception occurred creating the request or processing the response.
 	 */
@@ -156,7 +171,6 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 			builder.setPositiveButton("知道了", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-
 				}
 			});
 			builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -193,7 +207,6 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 	/**
 	 * 关闭网络处理对话框
 	 */
-
 	public void dismissDialog() {
 		if ((Activity) mContext == null || ((Activity) mContext).isFinishing())
 			return; //maybe not good !
@@ -206,8 +219,5 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 			});
 		}
 	}
-
-	;
-
 
 }

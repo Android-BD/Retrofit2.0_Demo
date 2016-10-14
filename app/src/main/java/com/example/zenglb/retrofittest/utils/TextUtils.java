@@ -5,7 +5,6 @@ package com.example.zenglb.retrofittest.utils;
  */
 public class TextUtils {
 
-
     /**
      * 把含有Unicode 的字符串可视化
      *
