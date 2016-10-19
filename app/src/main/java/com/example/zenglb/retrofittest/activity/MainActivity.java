@@ -1,6 +1,7 @@
 package com.example.zenglb.retrofittest.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -15,11 +16,15 @@ import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.IdentifyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 
 /**
+ * 登录,登出，token 过期，刷新token,重新登录
+ * 形成一个闭环的处理
+ * <p>
  * Http 的错误统一处理
  * <p>
  * <p>
@@ -29,8 +34,12 @@ public class MainActivity extends BaseActivity {
 	private final String TAG = MainActivity.class.getSimpleName();
 	private TextView message;
 	private TextView textView1, textView2, textView3, textView4;
-
 	private String refreshToken;
+	private RecyclerView mRecyclerView = null;
+	private MyAdapter myAdapter;
+	private List<String> data = new ArrayList<>();
+
+	private boolean isTokenNotAvailable=true;  //防止你在测试页面在Token没有过期的时候去点击Token过期
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,7 @@ public class MainActivity extends BaseActivity {
 		textView3 = (TextView) findViewById(R.id.test3);
 		textView4 = (TextView) findViewById(R.id.test4);
 
+
 //		TimeZone timeZone = TimeZone.getDefault();
 //		String id = timeZone.getID(); //获取时区id
 //		String name = timeZone.getDisplayName(); //获取名字
@@ -50,6 +60,7 @@ public class MainActivity extends BaseActivity {
 //		AlarmManager mAlarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 //		mAlarmManager.setTimeZone("GMT+08:00");
 
+		checkNumber();
 
 		//点击检查号码是否注册过了
 		textView1.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +94,85 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
+
+		mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+		myAdapter = new MyAdapter(this, data);
+		mRecyclerView.setAdapter(myAdapter);
+
+		myAdapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
+			@Override
+			public void onItemClick(View view, int position) {
+				switch (position) {
+					case 0:
+						refreshToken();
+						break;
+					case 1:
+						requestIdentify();
+
+						break;
+					case 2:
+						logout();
+						break;
+					case 3:
+						killToken();
+						break;
+					case 4:
+
+						break;
+					case 5:
+
+						break;
+
+					case 6:
+
+						break;
+					case 7:
+
+						break;
+				}
+			}
+
+			@Override
+			public void onItemLongClick(View view, int position) {
+
+			}
+		});
 	}
+
+	/**
+	 * 模拟登出操作
+	 *
+	 */
+	private void logout(){
+		refreshToken="模拟登出了的refreshToken";
+		HttpCall.setToken("模拟登出了的refreshToken");
+	}
+
+
+	/**
+	 * 模拟Token失效(过期啊，在其他地方登录)
+	 */
+	private void killToken(){
+		HttpCall.setToken("模拟Token失效(过期啊，在其他地方登录)");
+	}
+
+
+	/**
+	 * 登录成功后刷新信息，登出后隐藏
+	 *
+	 */
+	private void updateFuncs() {
+		if(data.size()==0){
+			String[] temp = this.getResources().getStringArray(R.array.languages);
+			for (int i = 0; i < temp.length; i++) {
+				data.add(temp[i]);
+			}
+			myAdapter.notifyDataSetChanged();
+		}
+
+
+	}
+
 
 	/**
 	 * 刷新Token
@@ -94,24 +183,25 @@ public class MainActivity extends BaseActivity {
 		LoginParams loginParams = new LoginParams();
 		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
 		loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
-		loginParams.setGrant_type("grant_type");
-		loginParams.setRefreshToken("");
+		loginParams.setGrant_type("refresh_token");
+		loginParams.setRefresh_token(refreshToken);
 
 		//2.实例化Http的请求。Call 语法看起来很繁琐，但是这也是Java的基础
-		Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(this).refreshToken(loginParams); //刷新Token
+		Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(this).refreshToken(loginParams,"sdghn"); //刷新Token
 		loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
 			@Override
 			public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
 				Log.e(TAG, loginResultHttpResponse.getResult().toString());
 				message.setText(loginResultHttpResponse.getResult().toString());
 				HttpCall.setToken("Bearer " + loginResultHttpResponse.getResult().getAccessToken());
-				refreshToken=loginResultHttpResponse.getResult().getRefreshToken();
+				refreshToken = loginResultHttpResponse.getResult().getRefreshToken();
+//				refreshToken = "12346789";
 			}
 
 			@Override
 			public void onFailure(int code, String messageStr) {
 				super.onFailure(code, messageStr);
-				message.setText(code + "  !loginCall!  " + messageStr);
+				message.setText(code + "  ! refreshToken !  " + messageStr);
 			}
 		});
 	}
@@ -121,10 +211,14 @@ public class MainActivity extends BaseActivity {
 	 * 测试登录
 	 */
 	private void testLogin() {
+
+		//登录前一定这两个值都是空的值
+		refreshToken="";
+		HttpCall.setToken("");
+
 		//良好的互联网环境需要大家的共同努力，对于不正当使用带来的法律责任，由事由者承担
 		//1.参数的封装
 		LoginParams loginParams = new LoginParams();
-
 		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
 		loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
 
@@ -140,7 +234,13 @@ public class MainActivity extends BaseActivity {
 				Log.e(TAG, loginResultHttpResponse.getResult().toString());
 				message.setText(loginResultHttpResponse.getResult().toString());
 				HttpCall.setToken("Bearer " + loginResultHttpResponse.getResult().getAccessToken());
-				refreshToken=loginResultHttpResponse.getResult().getRefreshToken();
+				refreshToken = loginResultHttpResponse.getResult().getRefreshToken();
+
+				updateFuncs();
+
+
+//				isTokenNotAvailable;
+
 			}
 
 			@Override

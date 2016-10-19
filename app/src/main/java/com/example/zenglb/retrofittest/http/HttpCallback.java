@@ -98,7 +98,6 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 			int code=response.raw().code();
 			String message =response.raw().message();
 
-
 			//================ test http 400-http 500 错误=================
 
 

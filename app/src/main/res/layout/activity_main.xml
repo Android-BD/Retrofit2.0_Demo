@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -15,7 +16,7 @@
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="88dp"
+        android:minHeight="111dp"
         android:background="#55000000"
         android:textColor="@android:color/white"
         android:text="Loading data ..."
@@ -27,8 +28,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/message"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:textSize="20sp"
+        android:visibility="gone"
         android:textColor="@color/colorAccent"
         android:text="检查号码是否已经被注册" />
 
@@ -37,7 +40,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/message"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
         android:textColor="@color/colorAccent"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:text="登录" />
@@ -48,7 +52,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/message"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="50dp"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:layout_marginTop="20dp"
         android:textColor="@color/colorAccent"
         android:text="身份信息" />
 
@@ -59,8 +65,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/message"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="50dp"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
         android:textColor="@color/colorAccent"
         android:text="刷新Token" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="7dp"
+
+        android:scrollbarStyle="insideOverlay"
+        app:layoutManager="LinearLayoutManager"
+        />
 
 </LinearLayout>

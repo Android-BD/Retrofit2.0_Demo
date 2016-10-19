@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="languages">
+        <item>刷新 Token</item>
+        <item>项目组织架构</item>
+
+        <item>模拟退出登录</item>
+        <item>让 Token过期</item>
+    </string-array>
+</resources>

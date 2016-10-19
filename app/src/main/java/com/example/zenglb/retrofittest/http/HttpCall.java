@@ -2,6 +2,7 @@ package com.example.zenglb.retrofittest.http;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.zenglb.retrofittest.http.param.LoginParams;
 import com.example.zenglb.retrofittest.http.result.EasyResult;
@@ -25,6 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.HEAD;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -69,9 +71,8 @@ public class HttpCall {
 //                            .addHeader("Authorization", newAccessToken)
 //                            .build();
 
-
                     return response.request().newBuilder()
-                            .addHeader("Authorization", TOKEN)
+                            .addHeader("Authorization", TOKEN)   //没有auth 认证
                             .build();
                 }
             };
@@ -91,14 +92,14 @@ public class HttpCall {
                 public Response intercept(Chain chain) throws IOException {
                     Request originalRequest = chain.request();
 
-                    if (TOKEN == null || alreadyHasAuthorizationHeader(originalRequest)) {
+                    if (TOKEN == null || alreadyHasAuthorizationHeader(originalRequest) || noNeedAuth(originalRequest)) {
                         return chain.proceed(originalRequest);
                     }
                     Request authorised = originalRequest.newBuilder()
                             .header("Authorization", TOKEN)
                             .build();
 
-                    return chain.proceed(originalRequest);
+                    return chain.proceed(authorised);
                 }
             };
 
@@ -134,10 +135,25 @@ public class HttpCall {
      */
     private static boolean alreadyHasAuthorizationHeader(Request originalRequest){
         if(originalRequest.headers().toString().contains("Authorization")){
-            return false;
+            Log.e("WW","已经添加了auth header");
+            return true;
         }
-        return true;
+        return false;
     }
+
+    /**
+     * 是否不需要Auth 认证，比如刷新Token 不需要
+     *
+     * @param originalRequest
+     */
+    private static boolean noNeedAuth(Request originalRequest){
+        if(originalRequest.headers().toString().contains("NoNeedAuthFlag")){
+            Log.e("WW","这个不需要添加Auth 认证");
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      *
@@ -157,13 +173,13 @@ public class HttpCall {
          * 登录
          */
         @POST("api/lebang/oauth/access_token")
-        Call<HttpResponse<LoginResult>> goLogin(@Body LoginParams loginParams);  //设置一下Header！do call
+        Call<HttpResponse<LoginResult>> goLogin(@Body LoginParams loginParams);
 
 		/**
-		 * 刷新Token
+		 * 刷新Token，这个Api 会很奇葩，他的生命周期在登录中，但是不需要Auth
          */
         @POST("api/lebang/oauth/access_token")
-        Call<HttpResponse<LoginResult>> refreshToken(@Body LoginParams loginParams);  //设置一下Header！do call
+        Call<HttpResponse<LoginResult>> refreshToken(@Body LoginParams loginParams,@Header("NoNeedAuthFlag") String noNeedAuthFlag);  //设置一下Header！do call
 
         /**
          * 登陆后请求校验身份
