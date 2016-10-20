@@ -1,8 +1,10 @@
 # Retrofit2.0_Demo
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
->  Retrofit2 官方：http://square.github.io/retrofit/
+>  Retrofit2 官方：http://square.github.io/retrofit
+
 >  Retrofit2 中文教程：http://www.jianshu.com/p/308f3c54abdd
+
 >  Retrofit2 英文教程：https://futurestud.io/tutorials/retrofit-2-manage-request-headers-in-okhttp-interceptor
 
 
