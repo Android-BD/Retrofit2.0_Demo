@@ -93,13 +93,10 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 			}
 		} else {  // 一定要压倒所有case
 
-
 			//================ test http 400-http 500 错误=================
 			int code=response.raw().code();
 			String message =response.raw().message();
-
 			//================ test http 400-http 500 错误=================
-
 
 			String errorBodyStr = "";
 			try {
@@ -205,6 +202,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 
 	/**
 	 * 关闭网络处理对话框
+	 *
 	 */
 	public void dismissDialog() {
 		if ((Activity) mContext == null || ((Activity) mContext).isFinishing())

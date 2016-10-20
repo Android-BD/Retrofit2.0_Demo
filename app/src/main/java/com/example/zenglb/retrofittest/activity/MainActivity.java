@@ -15,7 +15,10 @@ import com.example.zenglb.retrofittest.http.param.LoginParams;
 import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.IdentifyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
+import com.example.zenglb.retrofittest.http.result.Modules;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,8 +110,8 @@ public class MainActivity extends BaseActivity {
 						refreshToken();
 						break;
 					case 1:
-						requestIdentify();
-
+						//requestIdentify();
+						requestModules();
 						break;
 					case 2:
 						logout();
@@ -144,8 +147,8 @@ public class MainActivity extends BaseActivity {
 	 *
 	 */
 	private void logout(){
-		refreshToken="模拟登出了的refreshToken";
-		HttpCall.setToken("模拟登出了的refreshToken");
+		refreshToken="refreshToken refreshToken set logout";
+		HttpCall.setToken("Bearer TokenSet-Logout");
 	}
 
 
@@ -153,7 +156,25 @@ public class MainActivity extends BaseActivity {
 	 * 模拟Token失效(过期啊，在其他地方登录)
 	 */
 	private void killToken(){
-		HttpCall.setToken("模拟Token失效(过期啊，在其他地方登录)");
+		String tempToken=getOsDisplay("Bearer TokenSet-killToken");
+
+		try{
+			URLDecoder.decode(tempToken,"UTF-8");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		HttpCall.setToken(tempToken);
+	}
+
+
+	private String getOsDisplay(String string) {
+			try {
+				return URLEncoder.encode(string, "UTF-8");
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
 	}
 
 
@@ -169,8 +190,6 @@ public class MainActivity extends BaseActivity {
 			}
 			myAdapter.notifyDataSetChanged();
 		}
-
-
 	}
 
 
@@ -178,7 +197,6 @@ public class MainActivity extends BaseActivity {
 	 * 刷新Token
 	 */
 	private void refreshToken() {
-		//良好的互联网环境需要大家的共同努力，对于不正当使用带来的法律责任，由事由者承担
 		//1.参数的封装
 		LoginParams loginParams = new LoginParams();
 		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
@@ -187,15 +205,14 @@ public class MainActivity extends BaseActivity {
 		loginParams.setRefresh_token(refreshToken);
 
 		//2.实例化Http的请求。Call 语法看起来很繁琐，但是这也是Java的基础
-		Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(this).refreshToken(loginParams,"sdghn"); //刷新Token
-		loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
+		Call<HttpResponse<LoginResult>> refreshTokenCall = HttpCall.getApiService(this).refreshToken(loginParams,"refreshToken"); //刷新Token
+		refreshTokenCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
 			@Override
 			public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
 				Log.e(TAG, loginResultHttpResponse.getResult().toString());
 				message.setText(loginResultHttpResponse.getResult().toString());
 				HttpCall.setToken("Bearer " + loginResultHttpResponse.getResult().getAccessToken());
 				refreshToken = loginResultHttpResponse.getResult().getRefreshToken();
-//				refreshToken = "12346789";
 			}
 
 			@Override
@@ -211,7 +228,6 @@ public class MainActivity extends BaseActivity {
 	 * 测试登录
 	 */
 	private void testLogin() {
-
 		//登录前一定这两个值都是空的值
 		refreshToken="";
 		HttpCall.setToken("");
@@ -250,6 +266,28 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 	}
+
+	/**
+	 * 请求可以使用的模块
+	 */
+	private void requestModules() {
+		Call<HttpResponse<Modules>> getModulesCall = HttpCall.getApiService(this).getModules(); //尝试登陆
+		getModulesCall.enqueue(new HttpCallBack<HttpResponse<Modules>>(this) {
+			@Override
+			public void onSuccess(HttpResponse<Modules> getModulesCallResponse) {
+				Log.e(TAG, getModulesCallResponse.getResult().toString());
+				message.setText(getModulesCallResponse.getResult().toString());
+			}
+
+			@Override
+			public void onFailure(int code, String failedText) {
+				super.onFailure(code,failedText);
+				message.setText(code + "@@getModulesCall@@" + failedText);
+			}
+		});
+
+	}
+
 
 
 	/**

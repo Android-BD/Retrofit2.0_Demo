@@ -16,11 +16,12 @@
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="111dp"
+        android:minHeight="99dp"
+        android:maxHeight="135dp"
         android:background="#55000000"
         android:textColor="@android:color/white"
         android:text="Loading data ..."
-        android:padding="23dp"
+        android:padding="11dp"
         />
 
     <TextView
