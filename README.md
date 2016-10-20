@@ -5,6 +5,7 @@
 >  Retrofit2 中文教程：http://www.jianshu.com/p/308f3c54abdd
 >  Retrofit2 英文教程：https://futurestud.io/tutorials/retrofit-2-manage-request-headers-in-okhttp-interceptor
 
+
 如果所有api 返回格式都和github api v3 一样Restful,那直接的使用也会很爽，但是由于不同的业务场景并不会一样
 
 假如你的Server api和github API V3一样Restful 并且返回结果的json样式也是一样;请忽视以下内容，关掉本页面。
@@ -113,6 +114,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 ```
 More：any question,please contact me at anylife.zlb@gmail.com
 
+# 重要的事情说三遍！
 (Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
 (Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
 (Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
