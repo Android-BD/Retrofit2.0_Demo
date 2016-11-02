@@ -45,12 +45,13 @@ import retrofit2.Retrofit;
 
 public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T> {
 	private final String TAG = HttpCallBack.class.getSimpleName();
-	private static Gson gson = new Gson(); //it is ok ?
+	private static Gson gson = new Gson();
 	private Context mContext;
 	//是否需要显示Http 请求的进度，默认的是需要，但是Service 和 预取数据不需要
 	private boolean showProgress = true;
 
 	/**
+	 *
 	 * @param mContext
 	 */
 	public HttpCallBack(Context mContext) {
@@ -62,6 +63,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 	}
 
 	/**
+	 *
 	 * @param mContext
 	 * @param showProgress 默认需要显示进程，不要的话请传 false
 	 */
@@ -84,8 +86,8 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 	@Override
 	public void onResponse(Call<T> call, Response<T> response) {
 		dismissDialog();
-		if (response.isSuccessful()) {                                   //Http 状态码code:[200,300）
-			int responseCode = response.body().getCode();               //responseCode是api 里面定义的,进行进一步的数据和事件分发!
+		if (response.isSuccessful()) {                              //Http 状态码code:[200,300）
+			int responseCode = response.body().getCode();           //responseCode是api 里面定义的,进行进一步的数据和事件分发!
 			if (responseCode == 0) {
 				onSuccess(response.body());
 			} else {
@@ -94,8 +96,8 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 		} else {  // 一定要压倒所有case
 
 			//================ test http 400-http 500 错误=================
-			int code=response.raw().code();
-			String message =response.raw().message();
+			int code = response.raw().code();
+			String message = response.raw().message();
 			//================ test http 400-http 500 错误=================
 
 			String errorBodyStr = "";
@@ -123,7 +125,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 
 	/**
 	 * 区别处理Htpp error 和 业务逻辑的Error code ,如果有重复，需要区别处理
-	 *
+	 * <p>
 	 * Invoked when a network exception occurred talking to the server or when an unexpected
 	 * exception occurred creating the request or processing the response.
 	 */
@@ -202,7 +204,6 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 
 	/**
 	 * 关闭网络处理对话框
-	 *
 	 */
 	public void dismissDialog() {
 		if ((Activity) mContext == null || ((Activity) mContext).isFinishing())

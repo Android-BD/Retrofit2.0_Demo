@@ -123,3 +123,10 @@ More：any question,please contact me at anylife.zlb@gmail.com
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/device-2016-09-30-170835.png)
 
 
+# Http 基础知识
+> 使用Fiddler 能够更好的理解Http 协议
+
+- Http 协议详解：https://www.zybuluo.com/yangfch3/note/167490
+- 4中常见的Http Post 的方式 ：http://www.aikaiyuan.com/6324.html
+- RFC 2616(科学上网)：http://www.ietf.org/rfc/rfc2616.txt
+

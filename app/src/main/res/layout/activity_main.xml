@@ -20,24 +20,12 @@
         android:maxHeight="135dp"
         android:background="#55000000"
         android:textColor="@android:color/white"
-        android:text="Loading data ..."
+        android:text="Java 有史以来最好的HTTP Client"
         android:padding="11dp"
         />
 
     <TextView
-        android:id="@+id/test1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/message"
-        android:layout_marginTop="20dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:textSize="20sp"
-        android:visibility="gone"
-        android:textColor="@color/colorAccent"
-        android:text="检查号码是否已经被注册" />
-
-    <TextView
-        android:id="@+id/test2"
+        android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/message"
@@ -47,31 +35,6 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:text="登录" />
 
-    <TextView
-        android:id="@+id/test3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/message"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:textSize="20sp"
-        android:visibility="gone"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/colorAccent"
-        android:text="身份信息" />
-
-
-    <TextView
-        android:id="@+id/test4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/message"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp"
-        android:visibility="gone"
-        android:textColor="@color/colorAccent"
-        android:text="刷新Token" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="fill_parent"
@@ -79,7 +42,6 @@
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
         android:layout_marginTop="7dp"
-
         android:scrollbarStyle="insideOverlay"
         app:layoutManager="LinearLayoutManager"
         />
