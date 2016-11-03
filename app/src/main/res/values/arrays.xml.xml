@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="languages">
+        <item>刷新 Token</item>
+        <item>获取功能模块信息</item>
+        <item>模拟退出登录</item>
+        <item>让 Token过期(自动刷新Token)</item>
+        <item>让 RefreshToken过期(长久未用)</item>
+    </string-array>
+</resources>
