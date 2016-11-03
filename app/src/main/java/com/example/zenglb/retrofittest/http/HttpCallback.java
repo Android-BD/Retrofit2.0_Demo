@@ -162,7 +162,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 	 */
 	@CallSuper  //if overwrite,you should let it run.
 	public void onFailure(int code, String message) {
-		if (code == -1) {
+		if (code == -1&&mContext!=null) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			builder.setTitle("获取数据错误");
 			builder.setMessage("错误代码：" + code + "/n" + message);

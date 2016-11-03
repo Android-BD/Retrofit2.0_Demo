@@ -3,15 +3,13 @@ package com.example.zenglb.retrofittest.http;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.zenglb.retrofittest.activity.MainActivity;
 import com.example.zenglb.retrofittest.http.param.LoginParams;
 import com.example.zenglb.retrofittest.http.result.EasyResult;
-import com.example.zenglb.retrofittest.http.result.IdentifyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
 import com.example.zenglb.retrofittest.http.result.Modules;
-import com.example.zenglb.retrofittest.utils.httpUtils.OkHttpClientUtil;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
@@ -35,7 +33,7 @@ import retrofit2.http.Path;
  * Http 请求的设置 Basic OTE4MTExODExNjYwOjEyMzQ=
  * 1.How to overwrite or not overWrite headers
  * 2.https://futurestud.io/tutorials/retrofit-2-manage-request-headers-in-okhttp-interceptor
- *
+ * <p>
  * Created by Anylife.zlb@gmail.com on 2016/7/11.
  */
 public class HttpCall {
@@ -56,15 +54,20 @@ public class HttpCall {
 	public static ApiService getApiService(Context context) {
 		if (apiService == null) {
 			/**
-			 * 1
+			 *
 			 * 这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器：
 			 * 如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator
 			 */
 			Authenticator mAuthenticator2 = new Authenticator() {
 				@Override
-				public Request authenticate(Route route, Response response)
-						throws IOException {
+				public Request authenticate(Route route, Response response) throws IOException {
+					if (responseCount(response) >= 2) {
+						// If both the original call and the call with refreshed token failed,
+						// it will probably keep failing, so don't try again.
+						return null;
+					}
 
+					refreshToken();
 //                    Your.sToken = service.refreshToken();
 
 					return response.request().newBuilder()
@@ -113,7 +116,7 @@ public class HttpCall {
 					.authenticator(mAuthenticator2)
 					.build();
 
-			okHttpClient = OkHttpClientUtil.getSSLClient(okHttpClient, context, "cert.crt");
+//			okHttpClient = OkHttpClientUtil.getSSLClient(okHttpClient, context, "cert.crt");
 
 			Retrofit client = new Retrofit.Builder()
 					.baseUrl(baseUrl)
@@ -123,6 +126,49 @@ public class HttpCall {
 			apiService = client.create(ApiService.class);
 		}
 		return apiService;
+	}
+
+
+	/**
+	 * 同步刷新Token操作
+	 *
+	 */
+	private static void refreshToken() {
+		//1.参数的封装
+		LoginParams loginParams = new LoginParams();
+		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
+		loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
+		loginParams.setGrant_type("refresh_token");
+		loginParams.setRefresh_token(MainActivity.refreshToken);
+		Call<HttpResponse<LoginResult>> refreshTokenCall = HttpCall.getApiService(null).refreshToken(loginParams, "refreshToken");
+
+		try {
+			retrofit2.Response<HttpResponse<LoginResult>> response = refreshTokenCall.execute();
+			if (response.isSuccessful()) {
+				HttpResponse<LoginResult> httpResponse = response.body();
+				HttpCall.setToken("Bearer " + httpResponse.getResult().getAccessToken());
+				MainActivity.refreshToken = httpResponse.getResult().getRefreshToken();
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+
+	/**
+	 * 计算某个请求的请求次数！
+	 *
+	 * @param response
+	 * @return
+	 */
+	private static int responseCount(Response response) {
+		int result = 1;
+		while ((response = response.priorResponse()) != null) {
+			result++;
+		}
+		return result;
 	}
 
 	/**
@@ -175,8 +221,8 @@ public class HttpCall {
 		/**
 		 * 刷新Token，这个Api他的生命周期在登录中，但是不需要Auth
 		 *
-		 * @param loginParams     刷新token 的参数
-		 * @param noNeedAuthFlag  添加标志位，只要这个header 不是空那么Header 就会有这个字段，这样就行。建议填写非空的操作动词（比如refreshToken）
+		 * @param loginParams    刷新token 的参数
+		 * @param noNeedAuthFlag 添加标志位，只要这个header 不是空那么Header 就会有这个字段，这样就行。建议填写非空的操作动词（比如refreshToken）
 		 */
 		@POST("api/lebang/oauth/access_token")
 		Call<HttpResponse<LoginResult>> refreshToken(@Body LoginParams loginParams, @Header("NoNeedAuthFlag") String noNeedAuthFlag);  //设置一下Header！do call

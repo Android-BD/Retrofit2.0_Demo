@@ -13,9 +13,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="weather_type"
-            android:padding="16dp"
+            android:padding="14dp"
             android:textColor="@android:color/black"
-            android:textSize="20sp"
+            android:textSize="17sp"
             />
 </android.support.v7.widget.CardView>
 

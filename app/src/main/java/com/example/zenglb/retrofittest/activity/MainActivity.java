@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity {
 	private final String TAG = MainActivity.class.getSimpleName();
 	private TextView message;
 	private TextView textViewLogin;
-	private String refreshToken;
+	public  static String refreshToken;
 	private RecyclerView mRecyclerView = null;
 	private MyAdapter myAdapter;
 	private List<String> data = new ArrayList<>();
@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity {
 						killToken();
 						break;
 					case 4:
-
+						killRefreshToken();
 						break;
 					case 5:
 
@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity {
 	 * 模拟登出操作
 	 */
 	private void logout() {
-		refreshToken = "refreshToken refreshToken set logout";
+		refreshToken = "refreshToken set logout,is null le";
 		HttpCall.setToken("Bearer TokenSet-Logout");
 	}
 
@@ -116,6 +116,14 @@ public class MainActivity extends BaseActivity {
 		}
 
 		HttpCall.setToken(tempToken);
+	}
+
+
+	/**
+	 * 模拟Token失效(过期啊，在其他地方登录)
+	 */
+	private void killRefreshToken() {
+		refreshToken = "refreshToken - killRefreshToken";
 	}
 
 

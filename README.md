@@ -124,7 +124,7 @@ More：any question,please contact me at anylife.zlb@gmail.com
 
 
 # Http 基础知识
-> 使用Fiddler 能够更好的理解Http 协议
+> 使用Fiddler 抓包 能够更好的理解Http 协议
 
 - Http 协议详解：https://www.zybuluo.com/yangfch3/note/167490
 - 4中常见的Http Post 的方式 ：http://www.aikaiyuan.com/6324.html
