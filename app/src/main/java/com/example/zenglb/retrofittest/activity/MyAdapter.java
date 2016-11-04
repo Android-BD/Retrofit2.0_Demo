@@ -43,25 +43,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 		this.data = data;
 	}
 
-	/**
-	 * 删除一条数据
-	 *
-	 * @param position
-	 */
-	public void remove(int position) {
-		data.remove(position);
-		notifyItemRemoved(position); //一定要是这样的，不然不会有动画的
-	}
-
-	/**
-	 * 删除所有数据
-	 */
-	public void removeAllItems() {
-		data.clear();
-		notifyItemMoved(0, data.size() - 1);
-	}
-
-	//==================================== RecyclerView 更新封装完毕 =================================================
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		return new ViewHolder(mLayoutInflater.inflate(R.layout.function_item_layout, parent, false));

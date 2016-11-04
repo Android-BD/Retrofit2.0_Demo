@@ -131,7 +131,6 @@ public class HttpCall {
 
 	/**
 	 * 同步刷新Token操作
-	 *
 	 */
 	private static void refreshToken() {
 		//1.参数的封装

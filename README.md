@@ -3,7 +3,7 @@
 
 >  Retrofit2 官方：http://square.github.io/retrofit  
 >  Retrofit2 中文教程：http://www.jianshu.com/p/308f3c54abdd  
->  Retrofit2 英文教程：https://futurestud.io/tutorials/retrofit-2-manage-request-headers-in-okhttp-interceptor
+>  Retrofit2 英文教程：https://futurestud.io/tutorials/retrofit-how-to-refresh-an-access-token
 
 
 如果所有api 返回格式都和github api v3 一样Restful,那直接的使用也会很爽，但是由于不同的业务场景并不会一样
