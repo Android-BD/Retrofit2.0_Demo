@@ -104,9 +104,11 @@ public class MainActivity extends BaseActivity {
 						break;
 					case 3:
 						killToken();
+						Toast.makeText(MainActivity.this, "token 过期", Toast.LENGTH_SHORT).show();
 						break;
 					case 4:
 						killRefreshToken();
+						Toast.makeText(MainActivity.this, "Refresh Token 过期", Toast.LENGTH_SHORT).show();
 						break;
 					case 5:
 						checkUpdate();
@@ -346,5 +348,5 @@ public class MainActivity extends BaseActivity {
 					}
 				});
 	}
-	
+
 }

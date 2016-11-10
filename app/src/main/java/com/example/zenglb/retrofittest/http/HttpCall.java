@@ -108,7 +108,6 @@ public class HttpCall {
 						return originalResponse.newBuilder()
 								.body(new ProgressResponseBody(originalResponse.body(), progressListener))
 								.build();
-
 //						if (null != progressListener) {
 //							return chain.proceed(originalRequest);
 //						} else {
@@ -117,23 +116,24 @@ public class HttpCall {
 //									.body(new ProgressResponseBody(originalResponse.body(), progressListener))
 //									.build();
 //						}
-
 					}
 					Request authorisedRequest = originalRequest.newBuilder()
 							.header("Authorization", TOKEN)
 							.build();
 
-//					return chain.proceed(authorised);
+//					if (null == progressListener) {
+//						return chain.proceed(authorisedRequest);
+//					} else {
+//						Response originalResponse = chain.proceed(authorisedRequest);
+//						return originalResponse.newBuilder()
+//								.body(new ProgressResponseBody(originalResponse.body(), progressListener))
+//								.build();
+//					}
 
-					if (null == progressListener) {
-						return chain.proceed(authorisedRequest);
-					} else {
-						Response originalResponse = chain.proceed(authorisedRequest);
-						return originalResponse.newBuilder()
-								.body(new ProgressResponseBody(originalResponse.body(), progressListener))
-								.build();
-					}
-
+					Response originalResponse = chain.proceed(authorisedRequest);
+					return originalResponse.newBuilder()
+							.body(new ProgressResponseBody(originalResponse.body(), progressListener))
+							.build();
 				}
 			};
 
