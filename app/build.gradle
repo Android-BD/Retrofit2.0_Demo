@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.example.zenglb.retrofittest"
         minSdkVersion 15
-        targetSdkVersion 22  //下载的时候需要存储权限！
+        targetSdkVersion 22     //下载的时候需要存储权限！
         versionCode 3
         versionName "2.1"
     }
