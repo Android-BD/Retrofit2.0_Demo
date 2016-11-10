@@ -1,27 +1,44 @@
 package com.example.zenglb.retrofittest.activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zenglb.retrofittest.R;
 import com.example.zenglb.retrofittest.base.BaseActivity;
 import com.example.zenglb.retrofittest.http.HttpCall;
 import com.example.zenglb.retrofittest.http.HttpCallBack;
 import com.example.zenglb.retrofittest.http.HttpResponse;
+import com.example.zenglb.retrofittest.http.download.AppUpdateUtils;
+import com.example.zenglb.retrofittest.http.download.FileUtil;
+import com.example.zenglb.retrofittest.http.download.ProgressResponseBody;
 import com.example.zenglb.retrofittest.http.param.LoginParams;
 import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
 import com.example.zenglb.retrofittest.http.result.Modules;
+import com.example.zenglb.retrofittest.http.result.VersionMess;
+import com.google.gson.Gson;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * 登录,登出，token 过期，刷新token,重新登录
@@ -36,12 +53,21 @@ public class MainActivity extends BaseActivity {
 	private final String TAG = MainActivity.class.getSimpleName();
 	private TextView message;
 	private TextView textViewLogin;
-	public  static String refreshToken;
+	public static String refreshToken;
 	private RecyclerView mRecyclerView = null;
 	private MyAdapter myAdapter;
 	private List<String> data = new ArrayList<>();
 
 //	private boolean isTokenNotAvailable=true;
+
+
+	private static String getUpdateJsonStr = "{\n" +
+			"    \"type\": \"update\",\n" +
+			"    \"appVersion\": 38,\n" +
+			"    \"appMessage\": \"WHAT IS NEW\\n• Now you can draw or add text and emojis to photos\\n• In groups, you can now mention specific people by typing the @ symbol\",\n" +
+			"    \"downLoadUrl\": \"http://test-default-1.oss-cn-shenzhen.aliyuncs.com/201603/APP/38_BipbipMain030301.apk\",\n" +
+			"    \"isForceUpdate\": \"true\"\n" +
+			"}";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +109,7 @@ public class MainActivity extends BaseActivity {
 						killRefreshToken();
 						break;
 					case 5:
-
+						checkUpdate();
 						break;
 				}
 			}
@@ -163,7 +189,7 @@ public class MainActivity extends BaseActivity {
 		loginParams.setRefresh_token(refreshToken);
 
 		//2.实例化Http的请求。Call 语法看起来很繁琐，但是这也是Java的基础
-		Call<HttpResponse<LoginResult>> refreshTokenCall = HttpCall.getApiService(this).refreshToken(loginParams, "refreshToken"); //刷新Token
+		Call<HttpResponse<LoginResult>> refreshTokenCall = HttpCall.getApiService(null).refreshToken(loginParams, "refreshToken"); //刷新Token
 		refreshTokenCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
 			@Override
 			public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
@@ -200,7 +226,7 @@ public class MainActivity extends BaseActivity {
 		loginParams.setPassword("zxcv1234");
 
 		//2.实例化Http的请求。Call 语法看起来很繁琐，但是这也是Java的基础
-		Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(this).goLogin(loginParams); //尝试登陆
+		Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(null).goLogin(loginParams); //尝试登陆
 		loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
 			@Override
 			public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
@@ -226,7 +252,7 @@ public class MainActivity extends BaseActivity {
 	 * 请求可以使用的模块信息
 	 */
 	private void requestModules() {
-		Call<HttpResponse<Modules>> getModulesCall = HttpCall.getApiService(this).getModules(); //尝试登陆
+		Call<HttpResponse<Modules>> getModulesCall = HttpCall.getApiService(null).getModules(); //尝试登陆
 		getModulesCall.enqueue(new HttpCallBack<HttpResponse<Modules>>(this) {
 			@Override
 			public void onSuccess(HttpResponse<Modules> getModulesCallResponse) {
@@ -249,7 +275,7 @@ public class MainActivity extends BaseActivity {
 	private void checkNumber() {
 		//2.实例化Http的请求。
 		//这个时候的response 是一个没有用的response啊！
-		Call<HttpResponse<EasyResult>> checkMobileCall = HttpCall.getApiService(this).checkMobile("188265672076"); //尝试登陆
+		Call<HttpResponse<EasyResult>> checkMobileCall = HttpCall.getApiService(null).checkMobile("188265672076"); //尝试登陆
 		checkMobileCall.enqueue(new HttpCallBack<HttpResponse<EasyResult>>(this) {
 			@Override
 			public void onSuccess(HttpResponse<EasyResult> checkMobileHttpResponse) {
@@ -264,4 +290,59 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 	}
+
+
+	private void checkUpdate() {
+		final VersionMess versionMess = new Gson().fromJson(getUpdateJsonStr, VersionMess.class);
+		if (versionMess != null && versionMess.getAppVersion() > 0 && !TextUtils.isEmpty(versionMess.getDownLoadUrl())) {
+			new AlertDialog.Builder(MainActivity.this)
+					.setTitle("UPDATE")
+					.setMessage(versionMess.getAppMessage())
+					.setCancelable(false)
+					.setPositiveButton("update", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Toast.makeText(MainActivity.this, versionMess.getDownLoadUrl(), Toast.LENGTH_SHORT).show();
+							downLoadApp(versionMess.getDownLoadUrl());
+						}
+					})
+					.show();
+		}
+	}
+
+
+	/**
+	 * download app
+	 */
+	private void downLoadApp(String downloadUrl) {
+		final ProgressDialog dialog = AppUpdateUtils.getDownLoadProgressDialog(MainActivity.this);
+
+		HttpCall.getApiService(
+				new ProgressResponseBody.ProgressListener() {
+					@Override
+					public void update(long bytesRead, long contentLength, boolean done) {
+						dialog.setMax((int) (contentLength / 1024));
+						dialog.setProgress((int) (bytesRead / 1024));
+					}
+				}
+		).downloadApp(downloadUrl).subscribeOn(Schedulers.io())
+				.map(new Func1<ResponseBody, File>() {
+					@Override
+					public File call(ResponseBody responseBody) {
+						File apk = new File(Environment.getExternalStorageDirectory(), "WeChart");
+						FileUtil.save(responseBody.byteStream(), apk);
+						return apk;
+					}
+				})
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Action1<File>() {
+					@Override
+					public void call(File apk) {
+						dialog.dismiss();
+						AppUpdateUtils.getInstallAppDialog(MainActivity.this, apk).show();
+					}
+				});
+	}
+
+
 }

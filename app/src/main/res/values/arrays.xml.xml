@@ -6,5 +6,6 @@
         <item>模拟退出登录</item>
         <item>让 Token过期(自动刷新Token)</item>
         <item>让 RefreshToken过期(长久未用)</item>
+        <item>模拟检查升级App</item>
     </string-array>
 </resources>

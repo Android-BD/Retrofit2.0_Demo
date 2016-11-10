@@ -1,9 +1,9 @@
 package com.example.zenglb.retrofittest.http;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.example.zenglb.retrofittest.activity.MainActivity;
+import com.example.zenglb.retrofittest.http.download.ProgressResponseBody;
 import com.example.zenglb.retrofittest.http.param.LoginParams;
 import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
@@ -17,10 +17,12 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.Route;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -28,11 +30,16 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
+import rx.Observable;
 
 /**
  * Http 请求的设置 Basic OTE4MTExODExNjYwOjEyMzQ=
  * 1.How to overwrite or not overWrite headers
  * 2.https://futurestud.io/tutorials/retrofit-2-manage-request-headers-in-okhttp-interceptor
+ * http://www.jianshu.com/p/21fd4e468343
+ * <p>
  * <p>
  * Created by Anylife.zlb@gmail.com on 2016/7/11.
  */
@@ -43,6 +50,7 @@ public class HttpCall {
 	//2.正式数据定义区域,FBI WARMING,请不要把分享数据用作其他用途
 	private static ApiService apiService;
 	private static String baseUrl = "http://test.4009515151.com/";  //我想你是个好人
+	private static ProgressResponseBody.ProgressListener progressListener;
 
 	/**
 	 * 设置Token
@@ -51,7 +59,8 @@ public class HttpCall {
 		TOKEN = token;
 	}
 
-	public static ApiService getApiService(Context context) {
+	public static ApiService getApiService(final ProgressResponseBody.ProgressListener tempProgressListener) {
+		progressListener = tempProgressListener;
 		if (apiService == null) {
 			/**
 			 *
@@ -68,9 +77,9 @@ public class HttpCall {
 					}
 
 					refreshToken();
-//                    Your.sToken = service.refreshToken();
 
-					return response.request().newBuilder()
+					return response.request()
+							.newBuilder()
 							.header("Authorization", TOKEN)
 							.build();
 				}
@@ -93,20 +102,45 @@ public class HttpCall {
 
 					//Auth 到底放在哪里好呢？
 					if (TOKEN == null || alreadyHasAuthorizationHeader(originalRequest) || noNeedAuth(originalRequest)) {
-						return chain.proceed(originalRequest);
+//						return chain.proceed(originalRequest);
+
+						Response originalResponse = chain.proceed(originalRequest);
+						return originalResponse.newBuilder()
+								.body(new ProgressResponseBody(originalResponse.body(), progressListener))
+								.build();
+
+//						if (null != progressListener) {
+//							return chain.proceed(originalRequest);
+//						} else {
+//							Response originalResponse = chain.proceed(originalRequest);
+//							return originalResponse.newBuilder()
+//									.body(new ProgressResponseBody(originalResponse.body(), progressListener))
+//									.build();
+//						}
+
 					}
-					Request authorised = originalRequest.newBuilder()
+					Request authorisedRequest = originalRequest.newBuilder()
 							.header("Authorization", TOKEN)
 							.build();
 
-					return chain.proceed(authorised);
+//					return chain.proceed(authorised);
+
+					if (null == progressListener) {
+						return chain.proceed(authorisedRequest);
+					} else {
+						Response originalResponse = chain.proceed(authorisedRequest);
+						return originalResponse.newBuilder()
+								.body(new ProgressResponseBody(originalResponse.body(), progressListener))
+								.build();
+					}
+
 				}
 			};
 
 
 			HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 //            loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
-//            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY );
+			loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
 			OkHttpClient okHttpClient = new OkHttpClient.Builder()
 					.retryOnConnectionFailure(true)                 //出现错误进行重新的连接？重试几次？错误了有没有回调？
@@ -122,6 +156,7 @@ public class HttpCall {
 					.baseUrl(baseUrl)
 					.client(okHttpClient)
 					.addConverterFactory(GsonConverterFactory.create())
+					.addCallAdapterFactory(RxJavaCallAdapterFactory.create())  //RXjava
 					.build();
 			apiService = client.create(ApiService.class);
 		}
@@ -232,6 +267,11 @@ public class HttpCall {
 		 */
 		@GET("api/lebang/staffs/me/modules")
 		Call<HttpResponse<Modules>> getModules();
+
+
+		@Streaming
+		@GET()
+		Observable<ResponseBody> downloadApp(@Url String url);
 
 	}
 
