@@ -168,6 +168,9 @@ public class HttpCall {
 	 * 同步刷新Token操作
 	 */
 	private static void refreshToken() {
+
+//		TOKEN=null;  //这个时候的Token 肯定是无效的，并且你不能传过去，服务器还会检查（本来是不需要检查的）
+
 		//1.参数的封装
 		LoginParams loginParams = new LoginParams();
 		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
@@ -178,10 +181,14 @@ public class HttpCall {
 
 		try {
 			retrofit2.Response<HttpResponse<LoginResult>> response = refreshTokenCall.execute();
+
 			if (response.isSuccessful()) {
-				HttpResponse<LoginResult> httpResponse = response.body();
-				HttpCall.setToken("Bearer " + httpResponse.getResult().getAccessToken());
-				MainActivity.refreshToken = httpResponse.getResult().getRefreshToken();
+				int responseCode = response.body().getCode();           //responseCode是api 里面定义的,进行进一步的数据和事件分发!
+				if (responseCode == 0) {
+					HttpResponse<LoginResult> httpResponse = response.body();
+					HttpCall.setToken("Bearer " + httpResponse.getResult().getAccessToken());
+					MainActivity.refreshToken = httpResponse.getResult().getRefreshToken();
+				}
 			}
 
 		} catch (IOException e) {

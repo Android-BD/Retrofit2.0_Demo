@@ -127,6 +127,7 @@ public class MainActivity extends BaseActivity {
 	private void logout() {
 		refreshToken = "refreshToken set logout,is null le";
 		HttpCall.setToken("Bearer TokenSet-Logout");
+		mRecyclerView.setVisibility(View.INVISIBLE);
 	}
 
 
@@ -146,9 +147,10 @@ public class MainActivity extends BaseActivity {
 
 
 	/**
-	 * 模拟Token失效(过期啊，在其他地方登录)
+	 * refreshToken过期啊，长久没有使用，当然这个时候token也已经失效了
 	 */
 	private void killRefreshToken() {
+		killToken();  //Refresh Token 都过期了，那token 肯定过期了
 		refreshToken = "refreshToken - killRefreshToken";
 	}
 
@@ -236,6 +238,7 @@ public class MainActivity extends BaseActivity {
 				refreshToken = loginResultHttpResponse.getResult().getRefreshToken();
 
 				updateFuncs();
+				mRecyclerView.setVisibility(View.VISIBLE);
 
 //				isTokenNotAvailable;
 			}
@@ -329,7 +332,7 @@ public class MainActivity extends BaseActivity {
 				.map(new Func1<ResponseBody, File>() {
 					@Override
 					public File call(ResponseBody responseBody) {
-						File apk = new File(Environment.getExternalStorageDirectory(), "WeChart");
+						File apk = new File(Environment.getExternalStorageDirectory(), "YourAppName");
 						FileUtil.save(responseBody.byteStream(), apk);
 						return apk;
 					}
@@ -343,6 +346,5 @@ public class MainActivity extends BaseActivity {
 					}
 				});
 	}
-
-
+	
 }
