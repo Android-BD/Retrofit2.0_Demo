@@ -58,9 +58,6 @@ public class MainActivity extends BaseActivity {
 	private MyAdapter myAdapter;
 	private List<String> data = new ArrayList<>();
 
-//	private boolean isTokenNotAvailable=true;
-
-
 	private static String getUpdateJsonStr = "{\n" +
 			"    \"type\": \"update\",\n" +
 			"    \"appVersion\": 38,\n" +
@@ -83,7 +80,6 @@ public class MainActivity extends BaseActivity {
 			public void onClick(View view) {
 				testLogin();
 			}
-
 		});
 
 		mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
@@ -101,6 +97,7 @@ public class MainActivity extends BaseActivity {
 						break;
 					case 2:
 						logout();
+						Toast.makeText(MainActivity.this, "登出成功", Toast.LENGTH_SHORT).show();
 						break;
 					case 3:
 						killToken();
@@ -132,7 +129,6 @@ public class MainActivity extends BaseActivity {
 		mRecyclerView.setVisibility(View.INVISIBLE);
 	}
 
-
 	/**
 	 * 模拟Token失效(过期啊，在其他地方登录)
 	 */
@@ -143,10 +139,8 @@ public class MainActivity extends BaseActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		HttpCall.setToken(tempToken);
 	}
-
 
 	/**
 	 * refreshToken过期啊，长久没有使用，当然这个时候token也已经失效了
@@ -156,7 +150,6 @@ public class MainActivity extends BaseActivity {
 		refreshToken = "refreshToken - killRefreshToken";
 	}
 
-
 	private String getOsDisplay(String string) {
 		try {
 			return URLEncoder.encode(string, "UTF-8");
@@ -165,7 +158,6 @@ public class MainActivity extends BaseActivity {
 			return "";
 		}
 	}
-
 
 	/**
 	 * 登录成功后刷新信息，登出后隐藏
@@ -180,7 +172,6 @@ public class MainActivity extends BaseActivity {
 		}
 	}
 
-
 	/**
 	 * 刷新Token
 	 */
@@ -193,7 +184,7 @@ public class MainActivity extends BaseActivity {
 		loginParams.setRefresh_token(refreshToken);
 
 		//2.实例化Http的请求。Call 语法看起来很繁琐，但是这也是Java的基础
-		Call<HttpResponse<LoginResult>> refreshTokenCall = HttpCall.getApiService(null).refreshToken(loginParams, "refreshToken"); //刷新Token
+		Call<HttpResponse<LoginResult>> refreshTokenCall = HttpCall.getApiService(null).refreshToken(loginParams); //刷新Token
 		refreshTokenCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
 			@Override
 			public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
@@ -241,8 +232,6 @@ public class MainActivity extends BaseActivity {
 
 				updateFuncs();
 				mRecyclerView.setVisibility(View.VISIBLE);
-
-//				isTokenNotAvailable;
 			}
 
 			@Override
@@ -275,7 +264,7 @@ public class MainActivity extends BaseActivity {
 
 
 	/**
-	 * 检查号码是否被注册了。
+	 * 检查号码是否被注册了
 	 */
 	private void checkNumber() {
 		//2.实例化Http的请求。
@@ -297,6 +286,9 @@ public class MainActivity extends BaseActivity {
 	}
 
 
+	/**
+	 * check update
+	 */
 	private void checkUpdate() {
 		final VersionMess versionMess = new Gson().fromJson(getUpdateJsonStr, VersionMess.class);
 		if (versionMess != null && versionMess.getAppVersion() > 0 && !TextUtils.isEmpty(versionMess.getDownLoadUrl())) {

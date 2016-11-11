@@ -26,7 +26,6 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -35,25 +34,27 @@ import retrofit2.http.Url;
 import rx.Observable;
 
 /**
- * Http 请求的设置 Basic OTE4MTExODExNjYwOjEyMzQ=
- * 1.How to overwrite or not overWrite headers
- * 2.https://futurestud.io/tutorials/retrofit-2-manage-request-headers-in-okhttp-interceptor
- * http://www.jianshu.com/p/21fd4e468343
+ * Http
+ * 1.How to Upload Multiple Files to Server :https://futurestud.io/tutorials/retrofit-2-how-to-upload-multiple-files-to-server
+ * 2.http://www.jianshu.com/p/21fd4e468343
  * <p>
  * <p>
  * Created by Anylife.zlb@gmail.com on 2016/7/11.
  */
 public class HttpCall {
-	//1.测试数据区
+	private static final String TAG = HttpCall.class.getSimpleName();
+
+	//1.it is just a test code,you can save those fields whit SP:
+	//https://github.com/AnyLifeZLB/SharedPreferencesManger
 	private static String TOKEN;
 
-	//2.正式数据定义区域,FBI WARMING,请不要把分享数据用作其他用途
+	//2.
 	private static ApiService apiService;
-	private static String baseUrl = "http://test.4009515151.com/";  //我想你是个好人
+	private static String baseUrl = "http://test.4009515151.com/";  //you can replace with your host
 	private static ProgressResponseBody.ProgressListener progressListener;
 
 	/**
-	 * 设置Token
+	 * set demo token
 	 */
 	public static void setToken(String token) {
 		TOKEN = token;
@@ -63,7 +64,6 @@ public class HttpCall {
 		progressListener = tempProgressListener;
 		if (apiService == null) {
 			/**
-			 *
 			 * 这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器：
 			 * 如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator
 			 */
@@ -71,15 +71,11 @@ public class HttpCall {
 				@Override
 				public Request authenticate(Route route, Response response) throws IOException {
 					if (responseCount(response) >= 2) {
-						// If both the original call and the call with refreshed token failed,
-						// it will probably keep failing, so don't try again.
+						// If both the original call and the call with refreshed token failed,it will probably keep failing, so don't try again.
 						return null;
 					}
-
 					refreshToken();
-
-					return response.request()
-							.newBuilder()
+					return response.request().newBuilder()
 							.header("Authorization", TOKEN)
 							.build();
 				}
@@ -87,48 +83,25 @@ public class HttpCall {
 
 			/**
 			 * 2.
-			 *那个 if 判断意思是，如果你的 token 是空的，就是还没有请求到 token，比如对于登陆请求，是没有 token 的，
+			 * 那个 if 判断意思是，如果你的 token 是空的，就是还没有请求到 token，比如对于登陆请求，是没有 token 的，
 			 * 只有等到登陆之后才有 token，这时候就不进行附着上 token。另外，如果你的请求中已经带有验证 header 了，
 			 * 比如你手动设置了一个另外的 token，那么也不需要再附着这一个 token.
-			 *
-			 * 如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator，
-			 * 这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器
-			 *
 			 */
 			Interceptor mRequestInterceptor = new Interceptor() {
 				@Override
 				public Response intercept(Chain chain) throws IOException {
 					Request originalRequest = chain.request();
 
-					//Auth 到底放在哪里好呢？
 					if (TOKEN == null || alreadyHasAuthorizationHeader(originalRequest) || noNeedAuth(originalRequest)) {
-//						return chain.proceed(originalRequest);
-
 						Response originalResponse = chain.proceed(originalRequest);
 						return originalResponse.newBuilder()
-								.body(new ProgressResponseBody(originalResponse.body(), progressListener))
+								.body(new ProgressResponseBody(originalResponse.body(), progressListener)) //请求的进度查询
 								.build();
-//						if (null != progressListener) {
-//							return chain.proceed(originalRequest);
-//						} else {
-//							Response originalResponse = chain.proceed(originalRequest);
-//							return originalResponse.newBuilder()
-//									.body(new ProgressResponseBody(originalResponse.body(), progressListener))
-//									.build();
-//						}
 					}
+
 					Request authorisedRequest = originalRequest.newBuilder()
 							.header("Authorization", TOKEN)
 							.build();
-
-//					if (null == progressListener) {
-//						return chain.proceed(authorisedRequest);
-//					} else {
-//						Response originalResponse = chain.proceed(authorisedRequest);
-//						return originalResponse.newBuilder()
-//								.body(new ProgressResponseBody(originalResponse.body(), progressListener))
-//								.build();
-//					}
 
 					Response originalResponse = chain.proceed(authorisedRequest);
 					return originalResponse.newBuilder()
@@ -136,7 +109,6 @@ public class HttpCall {
 							.build();
 				}
 			};
-
 
 			HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 //            loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
@@ -156,7 +128,7 @@ public class HttpCall {
 					.baseUrl(baseUrl)
 					.client(okHttpClient)
 					.addConverterFactory(GsonConverterFactory.create())
-					.addCallAdapterFactory(RxJavaCallAdapterFactory.create())  //RXjava
+					.addCallAdapterFactory(RxJavaCallAdapterFactory.create())    //RXjava
 					.build();
 			apiService = client.create(ApiService.class);
 		}
@@ -165,41 +137,34 @@ public class HttpCall {
 
 
 	/**
-	 * 同步刷新Token操作
+	 * uese refresh token to Refresh an Access Token
 	 */
 	private static void refreshToken() {
-
-//		TOKEN=null;  //这个时候的Token 肯定是无效的，并且你不能传过去，服务器还会检查（本来是不需要检查的）
-
-		//1.参数的封装
 		LoginParams loginParams = new LoginParams();
 		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
 		loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
 		loginParams.setGrant_type("refresh_token");
 		loginParams.setRefresh_token(MainActivity.refreshToken);
-		Call<HttpResponse<LoginResult>> refreshTokenCall = HttpCall.getApiService(null).refreshToken(loginParams, "refreshToken");
+		Call<HttpResponse<LoginResult>> refreshTokenCall = HttpCall.getApiService(null).refreshToken(loginParams);
 
 		try {
 			retrofit2.Response<HttpResponse<LoginResult>> response = refreshTokenCall.execute();
-
 			if (response.isSuccessful()) {
-				int responseCode = response.body().getCode();           //responseCode是api 里面定义的,进行进一步的数据和事件分发!
+				int responseCode = response.body().getCode(); //responseCode是api 里面定义的,进行进一步的数据和事件分发!
 				if (responseCode == 0) {
 					HttpResponse<LoginResult> httpResponse = response.body();
 					HttpCall.setToken("Bearer " + httpResponse.getResult().getAccessToken());
 					MainActivity.refreshToken = httpResponse.getResult().getRefreshToken();
 				}
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
-
 	/**
-	 * 计算某个请求的请求次数！
+	 * If both the original call and the call with refreshed token failed,it will probably keep failing, so don't try again.
+	 * count times ++
 	 *
 	 * @param response
 	 * @return
@@ -213,26 +178,27 @@ public class HttpCall {
 	}
 
 	/**
-	 * 判断是否请求中含有了Author
+	 * check if already has auth header
 	 *
 	 * @param originalRequest
 	 */
 	private static boolean alreadyHasAuthorizationHeader(Request originalRequest) {
 		if (originalRequest.headers().toString().contains("Authorization")) {
-			Log.e("WW", "已经添加了auth header");
+			Log.w(TAG, "already add Auth header");
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * 是否不需要Auth 认证，比如刷新Token 不需要
+	 * some request after login/oauth before logout
+	 * but they no need oauth,so do not add auth header
 	 *
 	 * @param originalRequest
 	 */
 	private static boolean noNeedAuth(Request originalRequest) {
 		if (originalRequest.headers().toString().contains("NoNeedAuthFlag")) {
-			Log.e("WW", "这个不需要添加Auth 认证");
+			Log.d("WW", "no need auth !");
 			return true;
 		}
 		return false;
@@ -244,7 +210,7 @@ public class HttpCall {
 	 */
 	public interface ApiService {
 		/**
-		 * 检查号码是否存在
+		 * check if the mobile is registered
 		 */
 		@Headers({
 				"Accept: application/vnd.github.v3.full+json",
@@ -254,28 +220,34 @@ public class HttpCall {
 		Call<HttpResponse<EasyResult>> checkMobile(@Path("mobile") String mobile);
 
 		/**
-		 * 登录
+		 * login/oauth2
 		 */
 		@POST("api/lebang/oauth/access_token")
 		Call<HttpResponse<LoginResult>> goLogin(@Body LoginParams loginParams);
 
 		/**
-		 * 刷新Token，这个Api他的生命周期在登录中，但是不需要Auth
+		 * this request after login/oauth before logout
+		 * but no need oauth,so do not add auth header
 		 *
-		 * @param loginParams    刷新token 的参数
-		 * @param noNeedAuthFlag 添加标志位，只要这个header 不是空那么Header 就会有这个字段，这样就行。建议填写非空的操作动词（比如refreshToken）
+		 * @param loginParams
 		 */
 		@POST("api/lebang/oauth/access_token")
-		Call<HttpResponse<LoginResult>> refreshToken(@Body LoginParams loginParams, @Header("NoNeedAuthFlag") String noNeedAuthFlag);  //设置一下Header！do call
-
+		@Headers("NoNeedAuthFlag: NoNeedAuthFlag")
+		Call<HttpResponse<LoginResult>> refreshToken(@Body LoginParams loginParams);  //设置一下Header！do call
 
 		/**
-		 * 登陆后请求可用的模块
+		 * test get something
 		 */
 		@GET("api/lebang/staffs/me/modules")
 		Call<HttpResponse<Modules>> getModules();
 
 
+		/**
+		 * download file:https://futurestud.io/tutorials/retrofit-2-how-to-download-files-from-server
+		 *
+		 * @param url
+		 * @return
+		 */
 		@Streaming
 		@GET()
 		Observable<ResponseBody> downloadApp(@Url String url);
