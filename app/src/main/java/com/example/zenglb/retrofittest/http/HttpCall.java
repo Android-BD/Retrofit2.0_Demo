@@ -150,7 +150,7 @@ public class HttpCall {
 		try {
 			retrofit2.Response<HttpResponse<LoginResult>> response = refreshTokenCall.execute();
 			if (response.isSuccessful()) {
-				int responseCode = response.body().getCode(); //responseCode是api 里面定义的,进行进一步的数据和事件分发!
+				int responseCode = response.body().getCode();     //responseCode是api 里面定义的,进行进一步的数据和事件分发!
 				if (responseCode == 0) {
 					HttpResponse<LoginResult> httpResponse = response.body();
 					HttpCall.setToken("Bearer " + httpResponse.getResult().getAccessToken());
@@ -222,6 +222,7 @@ public class HttpCall {
 		/**
 		 * login/oauth2
 		 */
+		@Headers("test: ")
 		@POST("api/lebang/oauth/access_token")
 		Call<HttpResponse<LoginResult>> goLogin(@Body LoginParams loginParams);
 

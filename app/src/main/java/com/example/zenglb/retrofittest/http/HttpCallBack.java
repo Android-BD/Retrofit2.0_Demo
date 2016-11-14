@@ -84,7 +84,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 	@Override
 	public void onResponse(Call<T> call, Response<T> response) {
 		dismissDialog();
-		if (response.isSuccessful()) {                              //Http 状态码code:[200,300）
+		if (response.isSuccessful()) {
 			int responseCode = response.body().getCode();           //responseCode是api 里面定义的,进行进一步的数据和事件分发!
 			if (responseCode == 0) {
 				onSuccess(response.body());

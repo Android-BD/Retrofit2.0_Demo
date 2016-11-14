@@ -19,7 +19,7 @@ import java.io.File;
 public class AppUpdateUtils {
 
 	/**
-	 * show Download ProgressDialog
+	 * show Download ProgressDialog   vivo X5S L
 	 *
 	 * @param mContext
 	 * @return
