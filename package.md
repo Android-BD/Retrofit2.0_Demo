@@ -6,7 +6,7 @@
 - http 错误处理  
 ## API 不是那么的Restful
 我们知道github api（https://developer.github.com/v3） 是非常的restful 的风格，比如  
-> List all organizations GET /organizations 这个请求返回
+>List all organizations GET /organizations 这个请求返回
 ```
 [
   {
@@ -49,7 +49,6 @@ requ.enqueue(new CallBack<User>(){
         //不那么Restful 以后
         成功（返回了你想要的数据，code =0，error=""）      (失败code=123,error="不存在啊"）
         是要分开处理的
-        
     }
 
     @Override
@@ -91,9 +90,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 				} else {
 					onFailure(-1, "ErrorResponse is null ");  
 				}
-			} catch (Exception jsonException) {
-				onFailure(-1, "Json 数据解析异常");
-				jsonException.printStackTrace();
+			} catch (Exception jsonException) {//数据解析异常！
 			}
 
 		}//response is not Successful dispose over !
@@ -113,15 +110,7 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 		String errorMessage = "获取数据失败[Def-eor]" + temp;
 		if (t instanceof SocketTimeoutException) {
 			errorMessage = "服务器响应超时";
-		} else if (t instanceof ConnectException) {
-			errorMessage = "网络连接异常，请检查网络";
-		} else if (t instanceof RuntimeException) {
-			errorMessage = "运行时错误";
-		} else if (t instanceof UnknownHostException) {
-			errorMessage = "无法解析主机，请检查网络连接";
-		} else if (t instanceof UnknownServiceException) {
-			errorMessage = "未知的服务器错误";
-		}
+		} 
 		onFailure(-1, errorMessage);
 	}
 
