@@ -1,5 +1,6 @@
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 #Retrofit 为什么需要再次封装
+本文中的部分举例来自： https://github.com/AnyLifeZLB/Retrofit2.0_Demo 
 
 - api 不是那么的Restful  
 - 统一请求过程中的处理
@@ -61,7 +62,7 @@ requ.enqueue(new CallBack<User>(){
 });
 ```
 
-那么就要进行改造CallBack<T> 
+那么就要进行改造 interface CallBack<T> 
 ```
 public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T> {
 	private static Gson gson = new Gson();
@@ -108,12 +109,12 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 	 */
 	@Override
 	public void onFailure(Call<T> call, Throwable t) {
-		dismissDialog();
 		String temp = t.getMessage().toString();
 		String errorMessage = "获取数据失败[Def-eor]" + temp;
 		if (t instanceof SocketTimeoutException) {
 			errorMessage = "服务器响应超时";
 		} 
+		...  ... ... ...   !
 		onFailure(-1, errorMessage);
 	}
 
@@ -134,7 +135,20 @@ public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T
 				super.onFailure(code, messageStr);
 			}
 		});
-```
+```  
+
+
+## 统一请求过程中的处理
+这个好理解吧，比如http 请求开始的时候需要显示ProgressDialog，请求完成后消失，具体的不说了
+请查看Demo：https://github.com/AnyLifeZLB/Retrofit2.0_Demo  
+
+## http 错误处理  
+事情不是总会一帆风顺，Http 请求也是一样的，假如每个http 发起的地方都要处理http 400,500 或者自定义的有一致处理方式的错误
+那是肯定不行的吧，so super.onFailed吧，加上你要特殊处理的就行。  
+
+#More 
+欢迎指正 ，create issue：https://github.com/AnyLifeZLB/Retrofit2.0_Demo/issues
+
 
 
 
