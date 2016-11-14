@@ -4,9 +4,10 @@
 - api 不是那么的Restful  
 - 统一请求过程中的处理
 - http 错误处理  
+
 ## API 不是那么的Restful
 我们知道github api（https://developer.github.com/v3） 是非常的restful 的风格，比如  
->List all organizations GET /organizations 这个请求返回
+> List all organizations GET /organizations 这个请求返回
 ```
 [
   {
