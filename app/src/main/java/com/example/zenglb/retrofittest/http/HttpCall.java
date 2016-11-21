@@ -7,9 +7,11 @@ import com.example.zenglb.retrofittest.http.download.ProgressResponseBody;
 import com.example.zenglb.retrofittest.http.param.LoginParams;
 import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
+import com.example.zenglb.retrofittest.http.result.Messages;
 import com.example.zenglb.retrofittest.http.result.Modules;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
@@ -29,6 +31,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 import rx.Observable;
@@ -48,7 +51,7 @@ public class HttpCall {
 	//https://github.com/AnyLifeZLB/SharedPreferencesManger
 	private static String TOKEN;
 
-	//2.
+	//2.-------
 	private static ApiService apiService;
 	private static String baseUrl = "http://test.4009515151.com/";  //you can replace with your host
 	private static ProgressResponseBody.ProgressListener progressListener;
@@ -209,15 +212,6 @@ public class HttpCall {
 	 *
 	 */
 	public interface ApiService {
-		/**
-		 * check if the mobile is registered
-		 */
-		@Headers({
-				"Accept: application/vnd.github.v3.full+json",
-				"TestKey: Get*&^%$#@!test"
-		})
-		@GET("api/lebang/staffs/mobile/{mobile}")
-		Call<HttpResponse<EasyResult>> checkMobile(@Path("mobile") String mobile);
 
 		/**
 		 * login/oauth2
@@ -242,7 +236,6 @@ public class HttpCall {
 		@GET("api/lebang/staffs/me/modules")
 		Call<HttpResponse<Modules>> getModules();
 
-
 		/**
 		 * download file:https://futurestud.io/tutorials/retrofit-2-how-to-download-files-from-server
 		 *
@@ -252,6 +245,21 @@ public class HttpCall {
 		@Streaming
 		@GET()
 		Observable<ResponseBody> downloadApp(@Url String url);
+
+
+		//==================================================部分典型业务请求=====================================================
+
+//		/**
+//		 * check if the mobile is registered
+//		 */
+//		@GET("api/lebang/staffs/mobile/{mobile}")
+//		Call<HttpResponse<EasyResult>> checkMobile(@Path("mobile") String mobile);
+
+		/**
+		 * 消息列表 api/lebang/staffs/me/msgs
+		 */
+		@GET("api/lebang/staffs/me/msgs")
+		Call<HttpResponse<List<Messages>>> getMessages(@Query("page") int page, @Query("per_page") int perPage);
 
 	}
 

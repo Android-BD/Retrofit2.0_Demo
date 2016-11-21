@@ -23,6 +23,7 @@ import com.example.zenglb.retrofittest.http.download.ProgressResponseBody;
 import com.example.zenglb.retrofittest.http.param.LoginParams;
 import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
+import com.example.zenglb.retrofittest.http.result.Messages;
 import com.example.zenglb.retrofittest.http.result.Modules;
 import com.example.zenglb.retrofittest.http.result.VersionMess;
 import com.google.gson.Gson;
@@ -73,7 +74,7 @@ public class MainActivity extends BaseActivity {
 		message = (TextView) findViewById(R.id.message);
 		textViewLogin = (TextView) findViewById(R.id.login);
 
-		checkNumber();
+//		checkNumber();
 
 		textViewLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -109,6 +110,9 @@ public class MainActivity extends BaseActivity {
 						break;
 					case 5:
 						checkUpdate();
+						break;
+					case 6:
+						getMessages();
 						break;
 				}
 			}
@@ -263,27 +267,27 @@ public class MainActivity extends BaseActivity {
 	}
 
 
-	/**
-	 * 检查号码是否被注册了
-	 */
-	private void checkNumber() {
-		//2.实例化Http的请求。
-		//这个时候的response 是一个没有用的response啊！
-		Call<HttpResponse<EasyResult>> checkMobileCall = HttpCall.getApiService(null).checkMobile("188265672076"); //尝试登陆
-		checkMobileCall.enqueue(new HttpCallBack<HttpResponse<EasyResult>>(this) {
-			@Override
-			public void onSuccess(HttpResponse<EasyResult> checkMobileHttpResponse) {
-				Log.e(TAG, checkMobileHttpResponse.getResult().toString());
-				message.setText(checkMobileHttpResponse.getResult().toString());
-			}
-
-			@Override
-			public void onFailure(int code, String messageStr) {
-				super.onFailure(code, messageStr);
-				message.setText(code + "@@checkMobileCall@@" + messageStr);      //
-			}
-		});
-	}
+//	/**
+//	 * 检查号码是否被注册了
+//	 */
+//	private void checkNumber() {
+//		//2.实例化Http的请求。
+//		//这个时候的response 是一个没有用的response啊！
+//		Call<HttpResponse<EasyResult>> checkMobileCall = HttpCall.getApiService(null).checkMobile("188265672076"); //尝试登陆
+//		checkMobileCall.enqueue(new HttpCallBack<HttpResponse<EasyResult>>(this) {
+//			@Override
+//			public void onSuccess(HttpResponse<EasyResult> checkMobileHttpResponse) {
+//				Log.e(TAG, checkMobileHttpResponse.getResult().toString());
+//				message.setText(checkMobileHttpResponse.getResult().toString());
+//			}
+//
+//			@Override
+//			public void onFailure(int code, String messageStr) {
+//				super.onFailure(code, messageStr);
+//				message.setText(code + "@@checkMobileCall@@" + messageStr);      //
+//			}
+//		});
+//	}
 
 
 	/**
@@ -339,6 +343,28 @@ public class MainActivity extends BaseActivity {
 						AppUpdateUtils.getInstallAppDialog(MainActivity.this, apk).show();
 					}
 				});
+	}
+
+	/**
+	 * Test @Query
+	 * <p>
+	 * Call<HttpResponse<List<Messages>>> 是不是看起来很可怕
+	 */
+	private void getMessages() {
+		Call<HttpResponse<List<Messages>>> getMsgsCall = HttpCall.getApiService(null).getMessages(1, 3); //test query
+		getMsgsCall.enqueue(new HttpCallBack<HttpResponse<List<Messages>>>(this) {
+			@Override
+			public void onSuccess(HttpResponse<List<Messages>> listHttpResponse) {
+				Log.e(TAG, listHttpResponse.getResult().toString());
+				message.setText(listHttpResponse.getResult().toString());
+			}
+
+			@Override
+			public void onFailure(int code, String messageStr) {
+				super.onFailure(code, messageStr);
+				message.setText(code + "@@checkMobileCall@@" + messageStr);      //
+			}
+		});
 	}
 
 }
