@@ -1,18 +1,33 @@
-# Retrofit2.0_Demo
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
+#Retrofit 为什么需要再次封装
+本文中的部分举例来自： https://github.com/AnyLifeZLB/Retrofit2.0_Demo 
 
->  Retrofit2 官方：http://square.github.io/retrofit  
->  Retrofit2 中文教程：http://www.jianshu.com/p/308f3c54abdd  
->  Retrofit2 英文教程：https://futurestud.io/tutorials/retrofit-how-to-refresh-an-access-token
+- api 不是那么的Restful  
+- 统一请求过程中的处理
+- http 错误处理  
 
-
-如果所有api 返回格式都和github api v3 一样Restful,那直接的使用也会很爽，但是由于不同的业务场景并不会一样
-
-假如你的Server api和github API V3一样Restful 并且返回结果的json样式也是一样;请忽视以下内容，关掉本页面。
-but 假如你的服务器返回的数据格式大致如下类似,请往下看：
-
+## API 不是那么的Restful
+我们知道github api（https://developer.github.com/v3） 是非常的restful 的风格，比如  
+> List all organizations GET /organizations 这个请求返回
 ```
+[
+  {
+    "login": "github",
+    "id": 1,
+    "url": "https://api.github.com/orgs/github",
+    "repos_url": "https://api.github.com/orgs/github/repos",
+    "events_url": "https://api.github.com/orgs/github/events",
+    "hooks_url": "https://api.github.com/orgs/github/hooks",
+    ... ...
+  }
+]
+```  
 
+
+是不是很Restful，但是这样的格式有个弊端就是：当在浏览器调试api，后端查询出错时，很难查看错误码&错误信息。（当然用chrome的开发者工具可以看，但麻烦）
+
+所以我们看见的http 数据返回格式一般是这样的：  
+```
         {
             "code": 0, 
             "error": "",
@@ -25,108 +40,118 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
                        "scopes": "all"
                    }
         }
+```  
+这样的好处就是调试api方便，在任意浏览器都可以直观地看到错误码和错误信息
+
+那么我们就不会像如下一样官方示例的样式进行请求：
+```
+Call<Organizations> requ = userService.getUser("anylife");
+//异步网络请求
+requ.enqueue(new CallBack<User>(){
+    @Override
+    public void onResponse(Call<Person> call, Response<Organizations> response) {
+        //不那么Restful 以后
+        成功（返回了你想要的数据，code =0，error=""）      (失败code=123,error="不存在啊"）
+        是要分开处理的
+    }
+
+    @Override
+    public void onFailure(Call<Person> call, Throwable t) {
+        //这个每个请求都要去处理SocketTimeoutException,ConnectException，UnknownHostException 等等的会累死人
+    }
+});
 ```
 
-根据服务器的api再次封装一下。更加简洁的Http请求处理.个人推荐下面的简洁访问样式（api 由github 提供）
+那么就要进行改造 interface CallBack<T> 
 ```
-     /**
-      * List your repositories
-      */
-     @GET("/user/repos")
-     Call<List<Repositories>> getRepositories(@Query("page") int page);
-    
-    /**
-	 * 获取Repositories 数据
+public abstract class HttpCallBack<T extends HttpResponse> implements Callback<T> {
+	private static Gson gson = new Gson();
+	@Override
+	public void onResponse(Call<T> call, Response<T> response) {
+		dismissDialog();
+		if (response.isSuccessful()) {
+			int responseCode = response.body().getCode();   //responseCode是api 里面定义的,进行进一步的数据和事件分发!
+			if (responseCode == 0) {
+				onSuccess(response.body());
+			} else {
+				onFailure(responseCode, response.body().getError());
+			}
+		} else {  // 一定要压倒所有case
+			//================ test http 400-http 500 错误=================
+			int code = response.raw().code();
+			String message = response.raw().message();
+			//================ test http 400-http 500 错误=================
+			String errorBodyStr = "";
+			try {
+				errorBodyStr = TextUtils.convertUnicode(response.errorBody().string());
+			} catch (IOException ioe) {
+				Log.e("errorBodyStr ioe:", ioe.toString());
+			}
+			try {
+				HttpResponse errorResponse = gson.fromJson(errorBodyStr, HttpResponse.class);
+				if (null != errorResponse) {
+					onFailure(errorResponse.getCode(), errorResponse.getError()); 
+				} else {
+					onFailure(-1, "ErrorResponse is null ");  
+				}
+			} catch (Exception jsonException) {//数据解析异常！
+			}
+
+		}//response is not Successful dispose over !
+
+	}
+
+	/**
+	 * 区别处理Htpp error 和 业务逻辑的Error code ,如果有重复，需要区别处理
+	 * <p>
+	 * Invoked when a network exception occurred talking to the server or when an unexpected
+	 * exception occurred creating the request or processing the response.
 	 */
-	private void getRepositories(final int page){
-		Call<List<Repositories>> newsCall = HttpCall.getApiService(mActivity).getRepositories(page);
-		newsCall.enqueue(new HttpCallBack<List<Repositories>>(this) {
+	@Override
+	public void onFailure(Call<T> call, Throwable t) {
+		String temp = t.getMessage().toString();
+		String errorMessage = "获取数据失败[Def-eor]" + temp;
+		if (t instanceof SocketTimeoutException) {
+			errorMessage = "服务器响应超时";
+		} 
+		...  ... ... ...   !
+		onFailure(-1, errorMessage);
+	}
+
+}
+```
+
+那么请求的时候就变为类似这样  
+```
+		Call<T> loginCall = HttpCall.getApiService().goLogin(XXXXX); 
+		loginCall.enqueue(new HttpCallBack<T>(this) {
 			@Override
-			public void onSuccess(List<Repositories> repositiories) {
-				Log.d("Repositories",repositiories.toString());
+			public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
+				Log.e(TAG, loginResultHttpResponse.getResult().toString());
 			}
 
 			@Override
-			public void onFailure(int code, String message) {
-			    super.onFailure(code,message);
-
+			public void onFailure(int code, String messageStr) {
+				super.onFailure(code, messageStr);
 			}
 		});
-	} //
-```
-上面的例子使用的是github 的api (V3)。   https://developer.github.com/v3/orgs/#list-your-organizations
-
-![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
+```  
 
 
+## 统一请求过程中的处理
+这个好理解吧，比如http 请求开始的时候需要显示ProgressDialog，请求完成后消失，具体的不说了
+请查看Demo：https://github.com/AnyLifeZLB/Retrofit2.0_Demo  
+
+## http 错误处理  
+事情不是总会一帆风顺，Http 请求也是一样的，假如每个http 发起的地方都要处理http 400,500 或者自定义的有一致处理方式的错误
+那是肯定不行的吧，so super.onFailed吧，加上你要特殊处理的就行。  
+
+#More 
+欢迎指正 ，create issue：https://github.com/AnyLifeZLB/Retrofit2.0_Demo/issues
 
 
-#在本Demo 中的使用，更多见代码
-```
-
-        //1.登录提交的参数
-        LoginParams loginParams=new LoginParams();
-        loginParams.setClient_id("if i should see you after long years,how should i greet");
-        loginParams.setClient_secret("with tear? with slience");
-        loginParams.setGrant_type("password");
-        loginParams.setUsername("1882656xxxx");
-        loginParams.setPassword("dddddd");
-
-        //2.实例化Http的请求。泛型语法比较晦涩，然而我感觉很精简
-        Call<HttpResponse<LoginResult>> checkMobileCall = xHttpCall.getApiService(this).goLogin(loginParams); //尝试登陆
-        checkMobileCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
-            @Override
-            public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
-                Log.e(TAG, loginResultHttpResponse.getResult());
-                textView.setText(loginResultHttpResponse.getResult());
-            }
-
-            @Override
-            public void onFailure(int code,String message) {
-            	super.onFailure(code,message);
-                textView.setText(code+"@@@@"+message);
-            }
-        });
-        
-        
-        
-    /*** test 2
-     * 请求身份信息,返回的是List Array
-     *
-     */
-    private void  requestIdentify(){
-        Call<HttpResponse<List<IdentifyResult>>> getIdentityCall = xHttpCall.getApiService(this).getIdentities(); 
-        getIdentityCall.enqueue(new HttpCallBack<HttpResponse<List<IdentifyResult>>>(this) {
-            @Override
-            public void onSuccess(HttpResponse<List<IdentifyResult>> getIdentityCallResponse) {
-                Log.e(TAG, getIdentityCallResponse.getResult().toString());
-                textView2.setText(getIdentityCallResponse.getResult().toString());
-            }
-
-            @Override
-            public void onFailure(int code,String message) {
-            	super.onFailure(code,message);
-                textView2.setText(code+"@@@@"+message);
-            }
-        });
-    }
-        
-```
-More：any question,please contact me at anylife.zlb@gmail.com
-
-# 重要的事情说三遍！
-(Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
-(Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
-(Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
 
 
-![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/1111.png)
 
 
-# Http 基础知识
-> 使用Fiddler 抓包 能够更好的理解Http 协议
-
-- Http 协议详解：https://www.zybuluo.com/yangfch3/note/167490
-- 4中常见的Http Post 的方式 ：http://www.aikaiyuan.com/6324.html
-- RFC 2616(科学上网)：http://www.ietf.org/rfc/rfc2616.txt
 
