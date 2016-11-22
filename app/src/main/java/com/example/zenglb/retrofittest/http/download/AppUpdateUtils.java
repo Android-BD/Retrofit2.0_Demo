@@ -10,8 +10,6 @@ import android.widget.Toast;
 import com.example.zenglb.retrofittest.R;
 import java.io.File;
 
-
-
 /**
  *
  *
@@ -19,7 +17,7 @@ import java.io.File;
 public class AppUpdateUtils {
 
 	/**
-	 * show Download ProgressDialog   vivo X5S L
+	 * show Download ProgressDialog
 	 *
 	 * @param mContext
 	 * @return

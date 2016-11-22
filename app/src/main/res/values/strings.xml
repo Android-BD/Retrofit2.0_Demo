@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RetrofitTest</string>
+    <string name="app_name">Retrofit2 - Example</string>
 
     <string name="download">下载</string>
     <string name="install">安装</string>

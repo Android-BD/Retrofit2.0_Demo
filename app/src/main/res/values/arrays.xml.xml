@@ -2,11 +2,11 @@
 <resources>
     <string-array name="languages">
         <item>Refresh Token</item>
-        <item>获取功能模块信息</item>
-        <item>模拟退出登录</item>
-        <item>让 Token过期(自动刷新Token)</item>
-        <item>让 RefreshToken过期(长久未用)</item>
-        <item>模拟检查升级App</item>
-        <item>Query Test</item>
+        <item>Get Function Modules</item>
+        <item>Log Out</item>
+        <item>Disable Token</item>
+        <item>Disable refreshToken|long time no use</item>
+        <item>Download and update App</item>
+        <item>Get Message(Result is Array)</item>
     </string-array>
 </resources>

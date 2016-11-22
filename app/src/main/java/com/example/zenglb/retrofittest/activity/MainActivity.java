@@ -9,9 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.zenglb.retrofittest.R;
 import com.example.zenglb.retrofittest.base.BaseActivity;
 import com.example.zenglb.retrofittest.http.HttpCall;
@@ -21,19 +22,16 @@ import com.example.zenglb.retrofittest.http.download.AppUpdateUtils;
 import com.example.zenglb.retrofittest.http.download.FileUtil;
 import com.example.zenglb.retrofittest.http.download.ProgressResponseBody;
 import com.example.zenglb.retrofittest.http.param.LoginParams;
-import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
 import com.example.zenglb.retrofittest.http.result.Messages;
 import com.example.zenglb.retrofittest.http.result.Modules;
 import com.example.zenglb.retrofittest.http.result.VersionMess;
 import com.google.gson.Gson;
-
 import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import rx.android.schedulers.AndroidSchedulers;
@@ -42,11 +40,10 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
- * 登录,登出，token 过期，刷新token,重新登录
- * 形成一个闭环的处理
- * <p>
- * Http 的错误统一处理
- * <p>
+ * If your api is not restful,maybe this will be helpful;Retrofit2.0 example，include Log in ,Log out ,Token is disable,Refresh Token,download app and update etc
+ *
+ * Retrofit2.0 ，针对api不是那么Restful 的情况再次封装Http 请求,包括登录（oauth），登出，基本http请求和下载升级，自动刷新Token等完整的http 操作的闭环、
+ *
  * <p>
  * anylife.zlb@gamil.com
  */
@@ -69,17 +66,16 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		message = (TextView) findViewById(R.id.message);
 		textViewLogin = (TextView) findViewById(R.id.login);
-
-//		checkNumber();
-
 		textViewLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				testLogin();
+				Login();
 			}
 		});
 
@@ -98,15 +94,15 @@ public class MainActivity extends BaseActivity {
 						break;
 					case 2:
 						logout();
-						Toast.makeText(MainActivity.this, "登出成功", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, "Log out success", Toast.LENGTH_SHORT).show();
 						break;
 					case 3:
 						killToken();
-						Toast.makeText(MainActivity.this, "token 过期", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, "Disable Token", Toast.LENGTH_SHORT).show();
 						break;
 					case 4:
 						killRefreshToken();
-						Toast.makeText(MainActivity.this, "Refresh Token 过期", Toast.LENGTH_SHORT).show();
+						Toast.makeText(MainActivity.this, "Disable Refresh Token", Toast.LENGTH_SHORT).show();
 						break;
 					case 5:
 						checkUpdate();
@@ -125,7 +121,8 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
-	 * 模拟登出操作
+	 * Simulate Log out
+	 * 模拟登出
 	 */
 	private void logout() {
 		refreshToken = "refreshToken set logout,is null le";
@@ -135,6 +132,7 @@ public class MainActivity extends BaseActivity {
 
 	/**
 	 * 模拟Token失效(过期啊，在其他地方登录)
+	 * Disable token (long time no use app,token can use only in 30 days )
 	 */
 	private void killToken() {
 		String tempToken = getOsDisplay("Bearer TokenSet-killToken");
@@ -147,10 +145,11 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
+	 * Disable refreshToken过期啊 (long time no use app,refreshToken can use only in 35 days )
 	 * refreshToken过期啊，长久没有使用，当然这个时候token也已经失效了
 	 */
 	private void killRefreshToken() {
-		killToken();  //Refresh Token 都过期了，那token 肯定过期了
+		killToken();  //Refresh Token is disable ,so is token
 		refreshToken = "refreshToken - killRefreshToken";
 	}
 
@@ -163,9 +162,7 @@ public class MainActivity extends BaseActivity {
 		}
 	}
 
-	/**
-	 * 登录成功后刷新信息，登出后隐藏
-	 */
+
 	private void updateFuncs() {
 		if (data.size() == 0) {
 			String[] temp = this.getResources().getStringArray(R.array.languages);
@@ -176,18 +173,54 @@ public class MainActivity extends BaseActivity {
 		}
 	}
 
+
 	/**
-	 * 刷新Token
+	 * Login
+	 */
+	private void Login() {
+		//init token and refresh token
+		refreshToken = "";
+		HttpCall.setToken("");
+		LoginParams loginParams = new LoginParams();
+
+		//FBI WARMING,For mutual exchange of learning only,Don't use for other purposes !
+		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
+		loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
+		loginParams.setGrant_type("password");
+		loginParams.setUsername("18826562075");
+		loginParams.setPassword("zxcv1234");
+
+		//2.Generic Programming Techniques is the basis of Android develop
+		Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(null).goLogin(loginParams);
+		loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
+			@Override
+			public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
+				Log.e(TAG, loginResultHttpResponse.getResult().toString());
+				message.setText(loginResultHttpResponse.getResult().toString());
+				HttpCall.setToken("Bearer " + loginResultHttpResponse.getResult().getAccessToken());
+				refreshToken = loginResultHttpResponse.getResult().getRefreshToken();
+				updateFuncs();
+				mRecyclerView.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void onFailure(int code, String messageStr) {
+				super.onFailure(code, messageStr);
+				message.setText(code + "  !loginCall!  " + messageStr);
+			}
+		});
+	}
+
+	/**
+	 * Reresh Token
 	 */
 	private void refreshToken() {
-		//1.参数的封装
 		LoginParams loginParams = new LoginParams();
 		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
 		loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
 		loginParams.setGrant_type("refresh_token");
 		loginParams.setRefresh_token(refreshToken);
 
-		//2.实例化Http的请求。Call 语法看起来很繁琐，但是这也是Java的基础
 		Call<HttpResponse<LoginResult>> refreshTokenCall = HttpCall.getApiService(null).refreshToken(loginParams); //刷新Token
 		refreshTokenCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
 			@Override
@@ -206,51 +239,12 @@ public class MainActivity extends BaseActivity {
 		});
 	}
 
-	/**
-	 * 测试登录
-	 */
-	private void testLogin() {
-		//登录前一定这两个值都是空的值
-		refreshToken = "";
-		HttpCall.setToken("");
-
-		//良好的互联网环境需要大家的共同努力，对于不正当使用带来的法律责任，由事由者承担
-		//1.参数的封装
-		LoginParams loginParams = new LoginParams();
-		loginParams.setClient_id("5e96eac06151d0ce2dd9554d7ee167ce");
-		loginParams.setClient_secret("aCE34n89Y277n3829S7PcMN8qANF8Fh");
-
-		loginParams.setGrant_type("password");
-		loginParams.setUsername("18826562075");
-		loginParams.setPassword("zxcv1234");
-
-		//2.实例化Http的请求。Call 语法看起来很繁琐，但是这也是Java的基础
-		Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(null).goLogin(loginParams); //尝试登陆
-		loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
-			@Override
-			public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
-				Log.e(TAG, loginResultHttpResponse.getResult().toString());
-				message.setText(loginResultHttpResponse.getResult().toString());
-				HttpCall.setToken("Bearer " + loginResultHttpResponse.getResult().getAccessToken());
-				refreshToken = loginResultHttpResponse.getResult().getRefreshToken();
-
-				updateFuncs();
-				mRecyclerView.setVisibility(View.VISIBLE);
-			}
-
-			@Override
-			public void onFailure(int code, String messageStr) {
-				super.onFailure(code, messageStr);
-				message.setText(code + "  !loginCall!  " + messageStr);
-			}
-		});
-	}
 
 	/**
-	 * 请求可以使用的模块信息
+	 * test get http
 	 */
 	private void requestModules() {
-		Call<HttpResponse<Modules>> getModulesCall = HttpCall.getApiService(null).getModules(); //尝试登陆
+		Call<HttpResponse<Modules>> getModulesCall = HttpCall.getApiService(null).getModules();
 		getModulesCall.enqueue(new HttpCallBack<HttpResponse<Modules>>(this) {
 			@Override
 			public void onSuccess(HttpResponse<Modules> getModulesCallResponse) {
@@ -267,31 +261,10 @@ public class MainActivity extends BaseActivity {
 	}
 
 
-//	/**
-//	 * 检查号码是否被注册了
-//	 */
-//	private void checkNumber() {
-//		//2.实例化Http的请求。
-//		//这个时候的response 是一个没有用的response啊！
-//		Call<HttpResponse<EasyResult>> checkMobileCall = HttpCall.getApiService(null).checkMobile("188265672076"); //尝试登陆
-//		checkMobileCall.enqueue(new HttpCallBack<HttpResponse<EasyResult>>(this) {
-//			@Override
-//			public void onSuccess(HttpResponse<EasyResult> checkMobileHttpResponse) {
-//				Log.e(TAG, checkMobileHttpResponse.getResult().toString());
-//				message.setText(checkMobileHttpResponse.getResult().toString());
-//			}
-//
-//			@Override
-//			public void onFailure(int code, String messageStr) {
-//				super.onFailure(code, messageStr);
-//				message.setText(code + "@@checkMobileCall@@" + messageStr);      //
-//			}
-//		});
-//	}
-
-
 	/**
 	 * check update
+	 *
+	 * @Streaming and some rxjava
 	 */
 	private void checkUpdate() {
 		final VersionMess versionMess = new Gson().fromJson(getUpdateJsonStr, VersionMess.class);
@@ -346,13 +319,12 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
-	 * Test @Query
+	 * Test @Query and result is json array, not json object
 	 * <p>
-	 *     
-	 * Call<HttpResponse<List<Messages>>> 是不是看起来很可怕
+	 * Call<HttpResponse< jsonArray >> ,not Call<HttpResponse< jsonObj >>
 	 */
 	private void getMessages() {
-		Call<HttpResponse<List<Messages>>> getMsgsCall = HttpCall.getApiService(null).getMessages(1, 3); //test query
+		Call<HttpResponse<List<Messages>>> getMsgsCall = HttpCall.getApiService(null).getMessages(1, 3);
 		getMsgsCall.enqueue(new HttpCallBack<HttpResponse<List<Messages>>>(this) {
 			@Override
 			public void onSuccess(HttpResponse<List<Messages>> listHttpResponse) {

@@ -5,7 +5,6 @@ import android.util.Log;
 import com.example.zenglb.retrofittest.activity.MainActivity;
 import com.example.zenglb.retrofittest.http.download.ProgressResponseBody;
 import com.example.zenglb.retrofittest.http.param.LoginParams;
-import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
 import com.example.zenglb.retrofittest.http.result.Messages;
 import com.example.zenglb.retrofittest.http.result.Modules;
@@ -30,18 +29,13 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 import rx.Observable;
 
 /**
- * Http
- * 1.How to Upload Multiple Files to Server :https://futurestud.io/tutorials/retrofit-2-how-to-upload-multiple-files-to-server
- * 2.http://www.jianshu.com/p/21fd4e468343
- * <p>
- * <p>
+ *
  * Created by Anylife.zlb@gmail.com on 2016/7/11.
  */
 public class HttpCall {
@@ -53,6 +47,8 @@ public class HttpCall {
 
 	//2.-------
 	private static ApiService apiService;
+
+	//FBI WARMING,For mutual exchange of learning only,Don't use for other purposes !
 	private static String baseUrl = "http://test.4009515151.com/";  //you can replace with your host
 	private static ProgressResponseBody.ProgressListener progressListener;
 
@@ -67,8 +63,7 @@ public class HttpCall {
 		progressListener = tempProgressListener;
 		if (apiService == null) {
 			/**
-			 * 这是一个专门设计用于当验证出现错误的时候，进行询问获取处理的拦截器：
-			 * 如果你需要在遇到诸如 401 Not Authorised 的时候进行刷新 token，可以使用 Authenticator
+			 * http 401 Not Authorised
 			 */
 			Authenticator mAuthenticator2 = new Authenticator() {
 				@Override
@@ -85,7 +80,6 @@ public class HttpCall {
 			};
 
 			/**
-			 * 2.
 			 * 那个 if 判断意思是，如果你的 token 是空的，就是还没有请求到 token，比如对于登陆请求，是没有 token 的，
 			 * 只有等到登陆之后才有 token，这时候就不进行附着上 token。另外，如果你的请求中已经带有验证 header 了，
 			 * 比如你手动设置了一个另外的 token，那么也不需要再附着这一个 token.
@@ -94,11 +88,14 @@ public class HttpCall {
 				@Override
 				public Response intercept(Chain chain) throws IOException {
 					Request originalRequest = chain.request();
-
+					/***
+					 * TOKEN == null，Login/Register noNeed Token
+					 * noNeedAuth(originalRequest)    refreshToken api request is after log in before log out,but  refreshToken api no need auth
+					 */
 					if (TOKEN == null || alreadyHasAuthorizationHeader(originalRequest) || noNeedAuth(originalRequest)) {
 						Response originalResponse = chain.proceed(originalRequest);
 						return originalResponse.newBuilder()
-								.body(new ProgressResponseBody(originalResponse.body(), progressListener)) //请求的进度查询
+								.body(new ProgressResponseBody(originalResponse.body(), progressListener)) //get http request progress,et download app
 								.build();
 					}
 
@@ -118,10 +115,10 @@ public class HttpCall {
 			loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
 			OkHttpClient okHttpClient = new OkHttpClient.Builder()
-					.retryOnConnectionFailure(true)                 //出现错误进行重新的连接？重试几次？错误了有没有回调？
-					.connectTimeout(15, TimeUnit.SECONDS)           //设置超时时间 15 秒
-					.addNetworkInterceptor(mRequestInterceptor)     //网络拦截器。
-					.addInterceptor(loggingInterceptor)             //打印Log拦截器
+					.retryOnConnectionFailure(true)                 //??
+					.connectTimeout(15, TimeUnit.SECONDS)
+					.addNetworkInterceptor(mRequestInterceptor)
+					.addInterceptor(loggingInterceptor)
 					.authenticator(mAuthenticator2)
 					.build();
 
@@ -141,6 +138,7 @@ public class HttpCall {
 
 	/**
 	 * uese refresh token to Refresh an Access Token
+	 *
 	 */
 	private static void refreshToken() {
 		LoginParams loginParams = new LoginParams();
@@ -153,7 +151,7 @@ public class HttpCall {
 		try {
 			retrofit2.Response<HttpResponse<LoginResult>> response = refreshTokenCall.execute();
 			if (response.isSuccessful()) {
-				int responseCode = response.body().getCode();     //responseCode是api 里面定义的,进行进一步的数据和事件分发!
+				int responseCode = response.body().getCode();
 				if (responseCode == 0) {
 					HttpResponse<LoginResult> httpResponse = response.body();
 					HttpCall.setToken("Bearer " + httpResponse.getResult().getAccessToken());
@@ -228,7 +226,7 @@ public class HttpCall {
 		 */
 		@POST("api/lebang/oauth/access_token")
 		@Headers("NoNeedAuthFlag: NoNeedAuthFlag")
-		Call<HttpResponse<LoginResult>> refreshToken(@Body LoginParams loginParams);  //设置一下Header！do call
+		Call<HttpResponse<LoginResult>> refreshToken(@Body LoginParams loginParams);
 
 		/**
 		 * test get something
@@ -236,9 +234,7 @@ public class HttpCall {
 		@GET("api/lebang/staffs/me/modules")
 		Call<HttpResponse<Modules>> getModules();
 
-		/**
-		 * download file:https://futurestud.io/tutorials/retrofit-2-how-to-download-files-from-server
-		 *
+		/***
 		 * @param url
 		 * @return
 		 */
@@ -247,16 +243,12 @@ public class HttpCall {
 		Observable<ResponseBody> downloadApp(@Url String url);
 
 
-		//==================================================部分典型业务请求=====================================================
-
-//		/**
-//		 * check if the mobile is registered
-//		 */
-//		@GET("api/lebang/staffs/mobile/{mobile}")
-//		Call<HttpResponse<EasyResult>> checkMobile(@Path("mobile") String mobile);
+		//============================================  some typical http request   ==========================================
 
 		/**
-		 * 消息列表 api/lebang/staffs/me/msgs
+		 * get Message List();
+		 * <p>
+		 * Result is json Array, not json object
 		 */
 		@GET("api/lebang/staffs/me/msgs")
 		Call<HttpResponse<List<Messages>>> getMessages(@Query("page") int page, @Query("per_page") int perPage);

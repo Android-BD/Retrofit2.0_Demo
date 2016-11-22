@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.example.zenglb.retrofittest"
         minSdkVersion 15
-        targetSdkVersion 22     //下载的时候需要申请存储权限！
+        targetSdkVersion 22     //the best is >22
         versionCode 3
         versionName "2.1"
     }
@@ -17,7 +17,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {    //MVVP: https://developer.android.com/topic/libraries/data-binding/index.html?hl=zh-cn#build_environment
+    dataBinding {
+        //MVVP: https://developer.android.com/topic/libraries/data-binding/index.html?hl=zh-cn#build_environment
         enabled = true
     }
 }

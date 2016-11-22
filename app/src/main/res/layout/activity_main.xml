@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#44000000"
-        android:text=" - A type-safe HTTP client for Android and Java"/>
+        android:text="# A type-safe HTTP client for Android and Java"/>
 
     <TextView
         android:id="@+id/message"
@@ -39,14 +39,14 @@
         android:textSize="20sp"
         android:textColor="@color/colorAccent"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:text="登录" />
+        android:text="登录[Login]" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
         android:layout_marginTop="7dp"
         android:scrollbarStyle="insideOverlay"
         app:layoutManager="LinearLayoutManager"
