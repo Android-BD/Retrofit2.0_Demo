@@ -36,7 +36,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
 根据服务器的api再次封装一下。更加简洁的Http请求处理.个人推荐下面的简洁访问样式（api 由github 提供）
 ```
-     /**
+      /**
       * List your repositories
       */
      @GET("/user/repos")
@@ -61,7 +61,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 		});
 	} //
 ```
-上面的例子使用的是github 的api (V3)。   https://developer.github.com/v3/orgs/#list-your-organizations
+上面的例子使用的是github 的api (V3)。  https://developer.github.com/v3/orgs/#list-your-organizations
 
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
