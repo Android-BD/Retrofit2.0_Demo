@@ -9,11 +9,11 @@
 
 如果所有api 返回格式都和github api v3 一样Restful,那直接的使用也会很爽，但是由于不同的业务场景并不会一样
 
-假如你的Server api和github API V3一样Restful 并且返回结果的json样式也是一样;请忽视以下内容，关掉本页面。
+假如你项目定的Http api和github API V3一样Restful 返回结果的json样式也是一样;请忽视以下内容，关掉本页面。
 but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
 ```
-
+        //Http success
         {
             "code": 0, 
             "error": "",
@@ -25,6 +25,12 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
                        "refresh_token": "with tear? with slience",
                        "scopes": "all"
                    }
+        }
+        
+         // Http error
+        {
+            "code": HTTP_BAD_REQUEST,
+            "error": "错误信息"
         }
 ```
 
@@ -61,7 +67,6 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
 
 
-
 #在本Demo 中的使用，更多见代码
 ```
 
@@ -90,9 +95,8 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
         });
         
         
-        
-    /*** test 2
-     * 请求身份信息,返回的是List Array
+    /** test 2
+     * 请求身份信息,返回的是List JsonArray
      *
      */
     private void  requestIdentify(){

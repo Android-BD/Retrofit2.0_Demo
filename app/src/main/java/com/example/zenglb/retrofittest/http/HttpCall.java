@@ -4,7 +4,11 @@ import android.util.Log;
 
 import com.example.zenglb.retrofittest.activity.MainActivity;
 import com.example.zenglb.retrofittest.http.download.ProgressResponseBody;
+import com.example.zenglb.retrofittest.http.param.Datas;
+import com.example.zenglb.retrofittest.http.param.JobsData;
 import com.example.zenglb.retrofittest.http.param.LoginParams;
+import com.example.zenglb.retrofittest.http.param.PushReportData;
+import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
 import com.example.zenglb.retrofittest.http.result.Messages;
 import com.example.zenglb.retrofittest.http.result.Modules;
@@ -35,7 +39,6 @@ import retrofit2.http.Url;
 import rx.Observable;
 
 /**
- *
  * Created by Anylife.zlb@gmail.com on 2016/7/11.
  */
 public class HttpCall {
@@ -116,7 +119,7 @@ public class HttpCall {
 
 			OkHttpClient okHttpClient = new OkHttpClient.Builder()
 					.retryOnConnectionFailure(true)                 //??
-					.connectTimeout(15, TimeUnit.SECONDS)
+					.connectTimeout(2, TimeUnit.SECONDS)
 					.addNetworkInterceptor(mRequestInterceptor)
 					.addInterceptor(loggingInterceptor)
 					.authenticator(mAuthenticator2)
@@ -138,7 +141,6 @@ public class HttpCall {
 
 	/**
 	 * uese refresh token to Refresh an Access Token
-	 *
 	 */
 	private static void refreshToken() {
 		LoginParams loginParams = new LoginParams();
@@ -210,7 +212,6 @@ public class HttpCall {
 	 *
 	 */
 	public interface ApiService {
-
 		/**
 		 * login/oauth2
 		 */
@@ -251,7 +252,26 @@ public class HttpCall {
 		 * Result is json Array, not json object
 		 */
 		@GET("api/lebang/staffs/me/msgs")
-		Call<HttpResponse<List<Messages>>> getMessages(@Query("page") int page, @Query("per_page") int perPage);
+		Call<HttpResponse<List<Messages>>> getMessages(@Query("page1") int page, @Query("per_page") int perPage);
+
+
+		/**
+		 * 测试完毕后             删除，删除，删除
+		 *
+		 * @param
+		 * @return
+		 */
+		@POST("api/lebang/push/")
+		Call<HttpResponse<EasyResult>> postPushData(@Body Datas<String> datas);
+
+		/**
+		 * 完善接口           删除，删除，删除
+		 *
+		 * @param pushReportDatas
+		 * @return
+		 */
+		@POST("api/lebang/staffs/me/")
+		Call<HttpResponse<EasyResult>> postJobs(@Body List<JobsData> pushReportDatas);
 
 	}
 

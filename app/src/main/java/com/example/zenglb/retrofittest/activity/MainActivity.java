@@ -21,7 +21,11 @@ import com.example.zenglb.retrofittest.http.HttpResponse;
 import com.example.zenglb.retrofittest.http.download.AppUpdateUtils;
 import com.example.zenglb.retrofittest.http.download.FileUtil;
 import com.example.zenglb.retrofittest.http.download.ProgressResponseBody;
+import com.example.zenglb.retrofittest.http.param.Datas;
+import com.example.zenglb.retrofittest.http.param.JobsData;
 import com.example.zenglb.retrofittest.http.param.LoginParams;
+import com.example.zenglb.retrofittest.http.param.PushReportData;
+import com.example.zenglb.retrofittest.http.result.EasyResult;
 import com.example.zenglb.retrofittest.http.result.LoginResult;
 import com.example.zenglb.retrofittest.http.result.Messages;
 import com.example.zenglb.retrofittest.http.result.Modules;
@@ -41,9 +45,9 @@ import rx.schedulers.Schedulers;
 
 /**
  * If your api is not restful,maybe this will be helpful;Retrofit2.0 example，include Log in ,Log out ,Token is disable,Refresh Token,download app and update etc
- *
+ * <p>
  * Retrofit2.0 ，针对api不是那么Restful 的情况再次封装Http 请求,包括登录（oauth），登出，基本http请求和下载升级，自动刷新Token等完整的http 操作的闭环、
- *
+ * <p>
  * <p>
  * anylife.zlb@gamil.com
  */
@@ -87,10 +91,12 @@ public class MainActivity extends BaseActivity {
 			public void onItemClick(View view, int position) {
 				switch (position) {
 					case 0:
-						refreshToken();
+//						refreshToken();
+						TestReportPushLog();
 						break;
 					case 1:
-						requestModules();
+//						requestModules();
+						TestPostJobs();
 						break;
 					case 2:
 						logout();
@@ -175,6 +181,65 @@ public class MainActivity extends BaseActivity {
 
 
 	/**
+	 *
+	 */
+	private void TestPostJobs() {
+		List<JobsData> jobsDatas = new ArrayList<>();
+		JobsData jobsData1 = new JobsData("44030020", "LB10991");
+		JobsData jobsData2 = new JobsData("44030021", "LB10992");
+		jobsDatas.add(jobsData1);
+		jobsDatas.add(jobsData2);
+
+		//2.Generic Programming Techniques is the basis of Android develop
+		Call<HttpResponse<EasyResult>> postJobsReq = HttpCall.getApiService(null).postJobs(jobsDatas);
+		postJobsReq.enqueue(new HttpCallBack<HttpResponse<EasyResult>>(this) {
+			@Override
+			public void onSuccess(HttpResponse<EasyResult> loginResultHttpResponse) {
+//				Log.e(TAG, loginResultHttpResponse.getResult().toString());
+//				message.setText(loginResultHttpResponse.getResult().toString());
+			}
+
+			@Override
+			public void onFailure(int code, String messageStr) {
+				super.onFailure(code, messageStr);
+				message.setText(code + "  !loginCall!  " + messageStr);
+			}
+		});
+	}
+
+
+	/**
+	 *
+	 */
+	private void TestReportPushLog() {
+		List<PushReportData> pushReportDatas = new ArrayList<>();
+		PushReportData pushReportData1 = new PushReportData("1111111", "11111", "111");
+		PushReportData pushReportData2 = new PushReportData("2222222", "22222", "222");
+
+		pushReportDatas.add(pushReportData1);
+		pushReportDatas.add(pushReportData2);
+
+		Datas<String> datas = new Datas(new Gson().toJson(pushReportDatas)); //好恶心啊，有这样的搞的吗？
+
+		//2.Generic Programming Techniques is the basis of Android develop
+		Call<HttpResponse<EasyResult>> RepostResult = HttpCall.getApiService(null).postPushData(datas);
+		RepostResult.enqueue(new HttpCallBack<HttpResponse<EasyResult>>(this) {
+			@Override
+			public void onSuccess(HttpResponse<EasyResult> loginResultHttpResponse) {
+//				Log.e(TAG, loginResultHttpResponse.getResult().toString());
+//				message.setText(loginResultHttpResponse.getResult().toString());
+			}
+
+			@Override
+			public void onFailure(int code, String messageStr) {
+				super.onFailure(code, messageStr);
+				message.setText(code + "  !loginCall!  " + messageStr);
+			}
+		});
+	}
+
+
+	/**
 	 * Login
 	 */
 	private void Login() {
@@ -226,7 +291,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
 				Log.e(TAG, loginResultHttpResponse.getResult().toString());
-				message.setText(loginResultHttpResponse.getResult().toString());
+				message.setText(loginResultHttpResponse.getResult().toString());  //display result
 				HttpCall.setToken("Bearer " + loginResultHttpResponse.getResult().getAccessToken());
 				refreshToken = loginResultHttpResponse.getResult().getRefreshToken();
 			}
