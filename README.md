@@ -70,17 +70,16 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 #在本Demo 中的使用，更多见代码
 ```
 
-        //1.登录提交的参数
+        //1.post [LoginParams --> json] in http body
         LoginParams loginParams=new LoginParams();
         loginParams.setClient_id("if i should see you after long years,how should i greet");
         loginParams.setClient_secret("with tear? with slience");
-        loginParams.setGrant_type("password");
         loginParams.setUsername("1882656xxxx");
         loginParams.setPassword("dddddd");
 
         //2.实例化Http的请求。泛型语法比较晦涩，然而我感觉很精简
-        Call<HttpResponse<LoginResult>> checkMobileCall = xHttpCall.getApiService(this).goLogin(loginParams); //尝试登陆
-        checkMobileCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
+        Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(this).goLogin(loginParams); 
+        loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
             @Override
             public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
                 Log.e(TAG, loginResultHttpResponse.getResult());
