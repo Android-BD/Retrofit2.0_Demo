@@ -1,0 +1,72 @@
+# About SHWP
+- SHWP(powered by *&）is a learning project about HTTP Protocol and how server is handling requests.
+- Always,http get result(succe) should equals push message.
+- All result must contain a result field.
+
+#API (Push message should equals with get result)
+##Get ScrollText (web client can change text field)
+get a message to auto scroll on display bottom
+
+>GET /message
+```
+{
+    "type": "news",
+    "text": "请输入你的信息"
+}
+```
+
+##Get Ad content (web client can change type,urls field)
+get picture or video urls to play as ad
+tips:at once a time ,you can only display pictures or videos,maybe later can mix them  
+json array too less info ?!
+
+>GET /adurls
+```
+{
+    "type": "pic/video",
+    "urls": [
+        {
+            "url": "http://web-cache.stream.ne.jp/www11/nhkworld-tv/dwstv/222468/live.m3u8"
+        },
+        {
+            "url": "http://chyd-wsvod.wasu.tv/data13/ott/344/2015-05/28/1432782476341_377935/playlist.m3u8"
+        }
+    ]
+}
+```
+
+##Get app store list
+get app store list  
+
+>GET /appstore/list (web client can add.delete a list item field)
+```
+{
+    "type": "appStoreList",
+    "list": [
+        {
+            "appName": "WeChat",
+            "appIconurl": "https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1478666964&di=ea4d5b254cd37c44981668b05797b3fd&src=http://www.zgwxbbs.com/uploads/allimg/161019/11-161019101624.jpg",
+            "packageName": "com.google.docs",
+            "className": "LauncherMain",
+            "downLoadUrl": "http//www.googleplay/comme/wechat"
+        }
+    ]
+}
+```
+
+##Check Launcher Version
+Check Launcher Version for update (isForceUpdate(default:true))
+
+>GET /launcher/version (web client can change appVersion,appMessage,downLoadurl and isForceUpdate field)
+```
+{
+    "type": "update",
+    "appVersion": 38,
+    "appMessage": "WHAT'S NEW,In groups, you can now mention specific people by typing the @ symbol",
+    "downLoadUrl": "http://test-default-1.oss-cn-shenzhen.aliyuncs.com/201603/APP/38_BipbipMain030301.apk",
+    "isForceUpdate": "true"  
+}
+```
+
+## More
+所有的api 返回的内容都可以直接的用推送 push,服务器不需要接入第三方push 服务，直接透传
