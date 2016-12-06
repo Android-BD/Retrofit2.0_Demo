@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#44000000"
-        android:text="# A type-safe HTTP client for Android and Java"/>
+        android:text="# Http response result obj to string"/>
 
     <TextView
         android:id="@+id/message"

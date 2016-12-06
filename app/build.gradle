@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-        applicationId "com.example.zenglb.retrofittest"
+        applicationId "com.demo.zenglb.retrofittest"
         minSdkVersion 15
         targetSdkVersion 22     //the best is >22
         versionCode 3
