@@ -1,5 +1,7 @@
 # Retrofit2.0 Example   
-本文地址：https://github.com/AnyLifeZLB/Retrofit2.0_Demo
+本文地址：https://github.com/AnyLifeZLB/Retrofit2.0_Demo   
+更加完善的使用见：https://github.com/AnyLifeZLB/AndroidAppFrameWork  
+
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
 >  Retrofit2 官方：http://square.github.io/retrofit  
