@@ -80,8 +80,14 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
         loginParams.setPassword("dddddd");
 
         //2.实例化Http的请求。泛型语法比较晦涩，然而我感觉很精简
-        Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(this).goLogin(loginParams); 
+        //发起调用也非常的简单，首先定义一个Call,把参数loginParams 和 返回 HttpResponse<LoginResult> 放进去
+        //goLogin 这个http 请求在apiService 中用注解的方式定义好
+        Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(this).goLogin(loginParams);
+
+        //下面的基本就是代码自动生成了，Ctrl+O ,选择重写suc和failed (没有特殊的可以不重写，因为一般的failed都已经处理好了)
         loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
+
+            //Ctrl + O 自动生成重写的方法，处理Success 返回的数据
             @Override
             public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
                 Log.e(TAG, loginResultHttpResponse.getResult());
@@ -97,7 +103,7 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
         
         
     /** test 2
-     * 请求身份信息,返回的是List JsonArray
+     * 请求身份信息,返回的是List JsonArray  ---》  HttpResponse<List<IdentifyResult>>
      *
      */
     private void  requestIdentify(){
@@ -129,7 +135,7 @@ More：any question,please contact me at anylife.zlb@gmail.com
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/1111.png)
 
 
-# Http 基础知识
+# Http 基础知识   (引用的链接都私有化了，不舍得分享啊)
 > 使用Fiddler 抓包 能够更好的理解Http 协议
 
 - Http 协议详解：https://www.xxx.yyy.zzz
