@@ -38,15 +38,11 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
 根据服务器的api再次封装一下。更加简洁的Http请求处理.个人推荐下面的简洁访问样式（api 由github 提供）
 ```
-      /**
-      * List your repositories
-      */
+     // List your repositories
      @GET("/user/repos")
      Call<List<Repositories>> getRepositories(@Query("page") int page);
-    
-    /**
-	 * 获取Repositories 数据
-	 */
+
+	//获取Repositories 数据 !
 	private void getRepositories(final int page){
 		Call<List<Repositories>> newsCall = HttpCall.getApiService(mActivity).getRepositories(page);
 		newsCall.enqueue(new HttpCallBack<List<Repositories>>(this) {
@@ -58,7 +54,6 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 			@Override
 			public void onFailure(int code, String message) {
 			    super.onFailure(code,message);
-
 			}
 		});
 	} //
@@ -68,10 +63,8 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
 
-
-#在本Demo 中的使用，更多见代码
+#在本Demo中,Api 不像github api (V3)那样的Restful，大概的使用和解释如下：（更多Clone后见代码）
 ```
-
         //1.post [LoginParams --> json] in http body
         LoginParams loginParams=new LoginParams();
         loginParams.setClient_id("if i should see you after long years,how should i greet");
@@ -90,14 +83,12 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
             //Ctrl + O 自动生成重写的方法，处理Success 返回的数据
             @Override
             public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
-                Log.e(TAG, loginResultHttpResponse.getResult());
                 textView.setText(loginResultHttpResponse.getResult());
             }
 
             @Override
             public void onFailure(int code,String message) {
             	super.onFailure(code,message);
-                textView.setText(code+"@@@@"+message);
             }
         });
         
@@ -111,7 +102,6 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
         getIdentityCall.enqueue(new HttpCallBack<HttpResponse<List<IdentifyResult>>>(this) {
             @Override
             public void onSuccess(HttpResponse<List<IdentifyResult>> getIdentityCallResponse) {
-                Log.e(TAG, getIdentityCallResponse.getResult().toString());
                 textView2.setText(getIdentityCallResponse.getResult().toString());
             }
 
@@ -138,6 +128,6 @@ More：any question,please contact me at anylife.zlb@gmail.com
 # Http 基础知识   (引用的链接都私有化了，不舍得分享啊)
 > 使用Fiddler 抓包 能够更好的理解Http 协议
 
-- Http 协议详解：https://www.xxx.yyy.zzz
+- Http 协议详解：https://www.xxx.yyy.zzz  (推荐Http 图解，上野-宣 著)
 - RFC 2616(科学上网)：http://www.ietf.org/rfc/rfc2616.txt
 
