@@ -1,40 +1,13 @@
 # Retrofit2.0 Example   
 本文地址：https://github.com/AnyLifeZLB/Retrofit2.0_Demo   
-更加完善的使用见：https://github.com/AnyLifeZLB/AndroidAppFrameWork  
-
+解耦分析：http://www.jianshu.com/p/45cb536be2f4 （会用会封装是基础，关键是要知道为什么会这么好用）
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
 >  Retrofit2 官方：http://square.github.io/retrofit  
->  Retrofit2 中文教程：http://www.jianshu.com/p/308f3c54abdd  
->  Retrofit2 英文教程：https://futurestud.io/tutorials/retrofit-how-to-refresh-an-access-token
+>  Retrofit2 使用注意点总结：https://futurestud.io/tutorials/retrofit-how-to-refresh-an-access-token
 
 
-如果所有api 返回格式都和github api v3 一样Restful,那直接的使用也会很爽，但是由于不同的业务场景并不会一样
-
-假如你项目定的Http api和github API V3一样Restful 返回结果的json样式也是一样;请忽视以下内容，关掉本页面。
-but 假如你的服务器返回的数据格式大致如下类似,请往下看：
-
-```
-        //Http success
-        {
-            "code": 0, 
-            "error": "",
-            "result":
-                   {
-                       "access_token": "if i should see you after long years,how should i greet",
-                       "token_type": "Bearer",
-                       "expires": "2016-05-12 17:13:13",
-                       "refresh_token": "with tear? with slience",
-                       "scopes": "all"
-                   }
-        }
-        
-         // Http error
-        {
-            "code": HTTP_BAD_REQUEST,
-            "error": "错误信息"
-        }
-```
+# 如果所有api 返回格式都和github api v3 一样Restful
 
 根据服务器的api再次封装一下。更加简洁的Http请求处理.个人推荐下面的简洁访问样式（api 由github 提供）
 ```
@@ -62,6 +35,32 @@ but 假如你的服务器返回的数据格式大致如下类似,请往下看：
 
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
+
+# 假如你的API 不是那么的Restful
+但是由于不同的业务场景并不会一样，假如你项目定的Http api和github API V3一样Restful 返回结果的json样式也是一样;
+请忽视以下内容，关掉本页面。but 假如你的服务器返回的数据格式大致如下类似,请往下看：
+
+```
+        //Http success
+        {
+            "code": 0, 
+            "error": "",
+            "result":
+                   {
+                       "access_token": "if i should see you after long years,how should i greet",
+                       "token_type": "Bearer",
+                       "expires": "2016-05-12 17:13:13",
+                       "refresh_token": "with tear? with slience",
+                       "scopes": "all"
+                   }
+        }
+        
+         // Http error
+        {
+            "code": HTTP_BAD_REQUEST,
+            "error": "错误信息"
+        }
+```
 
 #在本Demo中,Api 不像github api (V3)那样的Restful，大概的使用和解释如下：（更多Clone后见代码）
 ```
@@ -128,6 +127,6 @@ More：any question,please contact me at anylife.zlb@gmail.com
 # Http 基础知识   (引用的链接都私有化了，不舍得分享啊)
 > 使用Fiddler 抓包 能够更好的理解Http 协议
 
-- Http 协议详解：https://www.xxx.yyy.zzz  (推荐Http 图解，上野-宣 著)
+- Http 协议详解：(书籍：Http 图解，上野-宣 著)
 - RFC 2616(科学上网)：http://www.ietf.org/rfc/rfc2616.txt
 
