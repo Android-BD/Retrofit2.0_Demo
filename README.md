@@ -1,15 +1,16 @@
-# Retrofit2.0 Example   
-本文地址：https://github.com/AnyLifeZLB/Retrofit2.0_Demo   
-解耦分析：http://www.jianshu.com/p/45cb536be2f4 （会用会封装是基础，关键是要知道为什么会这么好用）
+# 前言
+本Demo只是作为随意的练习实验使用，不再更新。后期Retrofit相关更改放在：https://github.com/AnyLifeZLB/AndroidAppFrameWork
+
+
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
 >  Retrofit2 官方：http://square.github.io/retrofit  
->  Retrofit2 使用注意点总结：https://futurestud.io/tutorials/retrofit-how-to-refresh-an-access-token
+>  Retrofit2 使用注意点总结：https://futurestud.io/tutorials/tag/retrofit
 
 
 # 如果所有api 返回格式都和github api v3 一样Restful
 
-根据服务器的api再次封装一下。更加简洁的Http请求处理.个人推荐下面的简洁访问样式（api 由github 提供）
+根据服务器的api再次封装一下，个人推荐下面的简洁访问样式（api 由github 提供）
 ```
      // List your repositories
      @GET("/user/repos")
@@ -36,9 +37,10 @@
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
 
 
-# 假如你的API 不是那么的Restful
-但是由于不同的业务场景并不会一样，假如你项目定的Http api和github API V3一样Restful 返回结果的json样式也是一样;
-请忽视以下内容，关掉本页面。but 假如你的服务器返回的数据格式大致如下类似,请往下看：
+# 但，假如你的API 不是那么的Restful
+但是由于不同的业务场景并不会一样，假如你项目定的Http api结构和github API V3一样Restful； 返回结果的json样式也是一样，
+请忽视以下内容，关掉本页面基本不需要再封装什么。   
+but 假如你的服务器返回的数据格式 不是那么的Restful而是大致如下类似,请往下看：
 
 ```
         //Http success
@@ -62,7 +64,7 @@
         }
 ```
 
-#在本Demo中,Api 不像github api (V3)那样的Restful，大概的使用和解释如下：（更多Clone后见代码）
+#在本Demo中,Api结构 不像github api (V3)那样的Restful，大概的使用和解释如下：（更多Clone后见代码）
 ```
         //1.post [LoginParams --> json] in http body
         LoginParams loginParams=new LoginParams();
@@ -116,17 +118,18 @@
 More：any question,please contact me at anylife.zlb@gmail.com
 
 # 重要的事情说三遍！
-(Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
-(Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
-(Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
+- (Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
+- (Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
+- (Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)
 
 
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/1111.png)
 
 
-# Http 基础知识   (引用的链接都私有化了，不舍得分享啊)
-> 使用Fiddler 抓包 能够更好的理解Http 协议
-
+# 关于更好的理解Retrofit-首先要理解HTTP，然后深入分析Retrofit,不要只是用，
+- 解耦分析：http://www.jianshu.com/p/45cb536be2f4 
 - Http 协议详解：(书籍：Http 图解，上野-宣 著)
-- RFC 2616(科学上网)：http://www.ietf.org/rfc/rfc2616.txt
+- RFC 2616(科学上网)：http://www.ietf.org/rfc/rfc2616.txt   
 
+
+# 欢迎对Demo进行指正改进
