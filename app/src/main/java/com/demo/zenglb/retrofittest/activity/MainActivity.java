@@ -92,11 +92,9 @@ public class MainActivity extends BaseActivity {
 				switch (position) {
 					case 0:
 						refreshToken();
-//						TestReportPushLog();
 						break;
 					case 1:
 						requestModules();
-//						TestPostJobs();
 						break;
 					case 2:
 						logout();
