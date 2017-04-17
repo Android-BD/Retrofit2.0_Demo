@@ -1,5 +1,6 @@
 # 前言
-本Demo只是作为随意的练习实验使用，不再更新。后期Retrofit相关更改放在：https://github.com/AnyLifeZLB/AndroidAppFrameWork
+本Demo只是作为练习实验使用，不再更新。
+后期Retrofit(与Rxjava2结合)相关更改放在：https://github.com/AnyLifeZLB/AndroidAppFrameWork
 
 
 ![image](https://github.com/AnyLifeZLB/Retrofit2.0_Demo/raw/master/banner.jpg)
@@ -76,15 +77,15 @@ but 假如你的服务器返回的数据格式 不是那么的Restful而是大�
         //2.实例化Http的请求。泛型语法比较晦涩，然而我感觉很精简
         //发起调用也非常的简单，首先定义一个Call,把参数loginParams 和 返回 HttpResponse<LoginResult> 放进去
         //goLogin 这个http 请求在apiService 中用注解的方式定义好
-        Call<HttpResponse<LoginResult>> loginCall = HttpCall.getApiService(this).goLogin(loginParams);
-
         //下面的基本就是代码自动生成了，Ctrl+O ,选择重写suc和failed (没有特殊的可以不重写，因为一般的failed都已经处理好了)
-        loginCall.enqueue(new HttpCallBack<HttpResponse<LoginResult>>(this) {
 
+
+        HttpCall.getApiService(this).goLogin(loginParams)
+                .enqueue(new HttpCallBack<LoginResult>(this) {
             //Ctrl + O 自动生成重写的方法，处理Success 返回的数据
             @Override
-            public void onSuccess(HttpResponse<LoginResult> loginResultHttpResponse) {
-                textView.setText(loginResultHttpResponse.getResult());
+            public void onSuccess(LoginResult loginResultHttpResponse) {
+                textView.setText(loginResultHttpResponse);
             }
 
             @Override
@@ -99,11 +100,11 @@ but 假如你的服务器返回的数据格式 不是那么的Restful而是大�
      *
      */
     private void  requestIdentify(){
-        Call<HttpResponse<List<IdentifyResult>>> getIdentityCall = xHttpCall.getApiService(this).getIdentities(); 
-        getIdentityCall.enqueue(new HttpCallBack<HttpResponse<List<IdentifyResult>>>(this) {
+        HttpCall.getApiService(this).getIdentities();
+                .enqueue(new HttpCallBack<HttpResponse<List<IdentifyResult>>>(this) {
             @Override
-            public void onSuccess(HttpResponse<List<IdentifyResult>> getIdentityCallResponse) {
-                textView2.setText(getIdentityCallResponse.getResult().toString());
+            public void onSuccess(List<IdentifyResult> getIdentityCallResponse) {
+                textView2.setText(getIdentityCallResponse.toString());
             }
 
             @Override
@@ -116,6 +117,84 @@ but 假如你的服务器返回的数据格式 不是那么的Restful而是大�
         
 ```
 More：any question,please contact me at anylife.zlb@gmail.com
+
+
+# 关键的就是用泛型重新定义CallBack<T>
+```
+
+public abstract class HttpCallBack<T> implements Callback<HttpResponse<T>> {
+    private final int RESPONSE_CODE_OK = 0;      //自定义的业务逻辑，成功返回积极数据
+    private final int RESPONSE_CODE_FAILED = -1; //返回数据失败
+    //是否需要显示Http 请求的进度，默认的是需要，但是Service 和 预取数据不需要
+    private boolean showProgress = true;
+    /**
+     * @param mContext
+     */
+    public HttpCallBack(Context mContext) {
+        this.mContext = mContext;
+        if (showProgress) {
+            //show your progress bar
+            showDialog(true, "loading...");
+        }
+    }
+
+
+    public abstract void onSuccess(T t);
+
+
+    /**
+     * Default error dispose!
+     * 一般的就是 AlertDialog 或 SnackBar
+     *
+     * @param code
+     * @param message
+     */
+    @CallSuper  //if overwrite,you should let it run.
+    public void onFailure(int code, String message) {
+        if (code == RESPONSE_CODE_FAILED && mContext != null) {
+            alertTip(message, code);
+        } else {
+            disposeEorCode(message, code);
+        }
+    }
+
+    @Override
+    public final void onResponse(Call<HttpResponse<T>> call, Response<HttpResponse<T>> response) {
+        dismissDialog();
+        if (response.isSuccessful()) {  //mean that   code >= 200 && code < 300
+            int responseCode = response.body().getCode();
+            //responseCode是业务api 里面定义的,根据responseCode进行进一步的数据和事件分发!
+            if (responseCode == RESPONSE_CODE_OK) {
+                onSuccess(response.body().getResult());
+            } else {
+                onFailure(responseCode, response.body().getError());
+            }
+        } else {
+
+        //---------）（*&……%#￥@%￥@#
+
+        }//response is not Successful dispose over !
+
+    }
+
+
+    @Override
+    public final void onFailure(Call<HttpResponse<T>> call, Throwable t) {
+        dismissDialog();
+        String temp = t.getMessage().toString();
+        String errorMessage = "获取数据失败[def-error]" + temp;
+        if (t instanceof SocketTimeoutException) {
+            errorMessage = "服务器响应超时";
+        } else if (t instanceof ConnectException) {
+            errorMessage = "网络连接异常，请检查网络";
+        }
+        onFailure(RESPONSE_CODE_FAILED, errorMessage);
+    }
+
+}
+
+
+```
 
 # 重要的事情说三遍！
 - (Demo 中提供的数据和api 仅仅适用于本Demo的演示，交流。请勿传播扩散)

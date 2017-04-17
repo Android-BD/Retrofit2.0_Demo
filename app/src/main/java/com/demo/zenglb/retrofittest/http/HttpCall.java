@@ -5,8 +5,9 @@ import android.util.Log;
 import com.demo.zenglb.retrofittest.activity.MainActivity;
 import com.demo.zenglb.retrofittest.http.download.ProgressResponseBody;
 import com.demo.zenglb.retrofittest.http.param.LoginParams;
-import com.demo.zenglb.retrofittest.http.result.ApiService;
 import com.demo.zenglb.retrofittest.http.result.LoginResult;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Authenticator;
@@ -18,7 +19,6 @@ import okhttp3.Route;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -36,7 +36,7 @@ public class HttpCall {
 
     //FBI WARMING,For mutual exchange of learning only,Don't use for other purposes !
     private static String baseUrl = "http://test.4009515151.com/";  //you can replace with your host
-    private static ProgressResponseBody.ProgressListener progressListener;
+    private static ProgressResponseBody.ProgressListener progressListener;  //这个没有用了
 
     /**
      * set demo token
@@ -113,7 +113,7 @@ public class HttpCall {
                     .baseUrl(baseUrl)
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())    //RXjava
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
             apiService = client.create(ApiService.class);
         }

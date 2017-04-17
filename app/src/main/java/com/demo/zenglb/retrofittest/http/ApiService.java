@@ -1,28 +1,40 @@
-package com.demo.zenglb.retrofittest.http.result;
+package com.demo.zenglb.retrofittest.http;
 
 import com.demo.zenglb.retrofittest.http.HttpResponse;
 import com.demo.zenglb.retrofittest.http.param.Datas;
 import com.demo.zenglb.retrofittest.http.param.JobsData;
 import com.demo.zenglb.retrofittest.http.param.LoginParams;
+import com.demo.zenglb.retrofittest.http.result.EasyResult;
+import com.demo.zenglb.retrofittest.http.result.LoginResult;
+import com.demo.zenglb.retrofittest.http.result.Messages;
+import com.demo.zenglb.retrofittest.http.result.Modules;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-import retrofit2.http.Streaming;
-import retrofit2.http.Url;
-import rx.Observable;
+
 
 /**
  * Created by zenglb on 2017/3/20.
  */
 
 public interface ApiService {
+
+    /**
+     * login/oauth2 By rxjava2
+     *
+     */
+    @Headers("NoNeedAuthFlag: NoNeedAuthFlag")
+    @POST("api/lebang/oauth/access_token")
+    Observable<HttpResponse<LoginResult>> goLoginByRxjava2(@Body LoginParams loginRequest);
+
+
     /**
      * login/oauth2
      */
@@ -46,13 +58,13 @@ public interface ApiService {
     @GET("api/lebang/staffs/me/modules")
     Call<HttpResponse<Modules>> getModules();
 
-    /***
-     * @param url
-     * @return
-     */
-    @Streaming
-    @GET()
-    Observable<ResponseBody> downloadApp(@Url String url);
+//    /***
+//     * @param url
+//     * @return
+//     */
+//    @Streaming
+//    @GET()
+//    Observable<ResponseBody> downloadApp(@Url String url);
 
 
     //============================================  some typical http request   ==========================================
